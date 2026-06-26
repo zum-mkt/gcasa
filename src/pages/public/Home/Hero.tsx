@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { useUiStore } from '@/stores/uiStore'
 import type { HeroContent } from '@/types/models'
 
 async function fetchHero(): Promise<HeroContent> {
@@ -13,24 +12,18 @@ async function fetchHero(): Promise<HeroContent> {
   return data.content as HeroContent
 }
 
-const HEADER_H = 80
-
 export function Hero() {
   const { data: hero = {} } = useQuery({
     queryKey: ['home-hero'],
     queryFn: fetchHero,
   })
-  const { bannerH } = useUiStore()
 
-  const offsetTop = HEADER_H + bannerH
-
-  // always render spacer so fixed header+banner don't overlap the content below
-  if (!hero.image_url) return <div style={{ height: offsetTop }} />
+  if (!hero.image_url) return null
 
   const hasText = !!(hero.title || hero.description)
 
   return (
-    <section className="relative w-full overflow-hidden" style={{ marginTop: offsetTop }}>
+    <section className="relative w-full overflow-hidden">
       <img
         src={hero.image_url}
         alt={hero.title ?? ''}

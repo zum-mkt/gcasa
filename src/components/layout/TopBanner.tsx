@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
-import { useUiStore } from '@/stores/uiStore'
 
 export type Banner = {
   id: string
@@ -18,9 +17,7 @@ export type Banner = {
   order_index: number
 }
 
-const DISMISSED_KEY = 'gcasa-banner-dismissed-v2'
-const HEADER_H = 80
-const BANNER_H = 80
+const DISMISSED_KEY = 'gcasa-banner-dismissed-v3'
 
 async function fetchBanners(): Promise<Banner[]> {
   const { data } = await supabase
@@ -32,7 +29,6 @@ async function fetchBanners(): Promise<Banner[]> {
 }
 
 export function TopBanner() {
-  const { showBanner, hideBanner } = useUiStore()
   const [dismissed, setDismissed] = useState(() =>
     sessionStorage.getItem(DISMISSED_KEY) === 'true'
   )
@@ -47,22 +43,12 @@ export function TopBanner() {
   const visible = !dismissed && banners.length > 0
 
   useEffect(() => {
-    if (visible) showBanner()
-    else hideBanner()
-  }, [visible])
-
-  useEffect(() => {
     if (banners.length <= 1) return
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % banners.length)
     }, 5000)
     return () => clearInterval(timer)
   }, [banners.length])
-
-  const dismiss = () => {
-    setDismissed(true)
-    sessionStorage.setItem(DISMISSED_KEY, 'true')
-  }
 
   if (!visible) return null
 
@@ -74,10 +60,7 @@ export function TopBanner() {
   const hasText = !!banner.text
 
   return (
-    <div
-      className="fixed left-0 right-0 z-40 overflow-hidden"
-      style={{ top: HEADER_H, height: BANNER_H }}
-    >
+    <div className="relative w-full overflow-hidden" style={{ height: 80 }}>
       {hasImage ? (
         <img
           src={banner.image_url!}
@@ -88,7 +71,6 @@ export function TopBanner() {
         <div className="absolute inset-0" style={{ background: bg }} />
       )}
 
-      {/* text overlay — only when text exists */}
       {hasText && (
         <AnimatePresence mode="wait">
           <motion.div
@@ -134,7 +116,6 @@ export function TopBanner() {
         </AnimatePresence>
       )}
 
-      {/* image-only: show link as overlay if present */}
       {!hasText && banner.link_href && (
         isExternal ? (
           <a href={banner.link_href} target="_blank" rel="noreferrer" className="absolute inset-0" aria-label={banner.link_label ?? 'Ver mais'} />
@@ -144,7 +125,7 @@ export function TopBanner() {
       )}
 
       <button
-        onClick={dismiss}
+        onClick={() => { setDismissed(true); sessionStorage.setItem(DISMISSED_KEY, 'true') }}
         className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors"
         aria-label="Fechar banner"
       >
