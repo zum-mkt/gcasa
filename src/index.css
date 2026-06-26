@@ -1,111 +1,168 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+@theme {
+  /* Orange institucional */
+  --color-primary-50:  #fff4ec;
+  --color-primary-100: #ffe4cc;
+  --color-primary-400: #f07a2a;
+  --color-primary-500: #E8630A;
+  --color-primary-600: #D4560A;
+  --color-primary-700: #B84A08;
+  --color-primary-800: #9A3E06;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Dourado */
+  --color-golden-400: #D4A84B;
+  --color-golden-500: #C9922A;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  /* Azul escuro (hero / cta / depoimentos) */
+  --color-navy-950: #060F20;
+  --color-navy-900: #0D1F3C;
+  --color-navy-800: #152845;
+  --color-navy-700: #1E3557;
+
+  /* Grafite e cinzas */
+  --color-graphite-900: #1A1A1A;
+  --color-graphite-700: #333333;
+  --color-graphite-500: #666666;
+  --color-graphite-300: #999999;
+  --color-graphite-100: #E8E8E4;
+  --color-graphite-50:  #F2F1ED;
+
+  /* Off-white */
+  --color-offwhite: #FAFAF8;
+
+  /* Legado (para compatibilidade com admin) */
+  --color-dark-950: #060F20;
+  --color-dark-900: #0D1F3C;
+  --color-dark-800: #152845;
+  --color-dark-700: #1E3557;
+  --color-dark-600: #2A4466;
+
+  /* Typography */
+  --font-sans: "Avenir LT", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "DIN Next", "Avenir LT", ui-sans-serif, system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-dropdown: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+}
+
+@layer base {
+  @font-face {
+    font-family: "Avenir LT";
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/avenir-lt-w05_35-light-128.woff2") format("woff2");
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  @font-face {
+    font-family: "Avenir LT";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/avenir-lt-w01_85-heavy1475544-131.woff2") format("woff2");
   }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  @font-face {
+    font-family: "DIN Next";
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/din-next-w01-light-134.woff2") format("woff2");
   }
-}
 
-body {
-  margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-color: var(--color-border, #E8E8E4);
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
   }
-}
-p {
-  margin: 0;
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    color: #333333;
+    background: #ffffff;
+    line-height: 1.7;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection {
+    background-color: #E8630A;
+    color: #ffffff;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    line-height: 1.15;
+    color: #1A1A1A;
+    margin: 0;
+    font-weight: 300;
+  }
+
+  p { margin: 0; }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; display: block; }
+  button { cursor: pointer; font-family: inherit; }
+  ul, ol { list-style: none; margin: 0; padding: 0; }
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+@layer utilities {
+  .section-label {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #E8630A;
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  .section-label-light {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .container-site {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 2rem;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Editorial heading */
+  .heading-editorial {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
 }
