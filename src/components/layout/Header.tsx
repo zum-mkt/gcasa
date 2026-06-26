@@ -68,7 +68,7 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 flex-shrink-0">
             {logoUrl ? (
-              <img src={logoUrl} alt={companyName} style={{ height: 60, width: 'auto' }} />
+              <img src={logoUrl} alt={companyName} style={{ height: 80, width: 'auto' }} />
             ) : (
               <>
                 <div className="w-8 h-8 bg-primary-500 flex items-center justify-center flex-shrink-0">

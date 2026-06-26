@@ -83,7 +83,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
               {logoUrl ? (
-                <img src={logoUrl} alt={companyName} className="h-9 w-auto object-contain" />
+                <img src={logoUrl} alt={companyName} className="h-16 w-auto object-contain" />
               ) : (
                 <>
                   <div className="w-9 h-9 bg-primary-600 rounded-lg flex items-center justify-center flex-shrink-0">
