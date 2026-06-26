@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '0 9 * * 1' # Segunda-feira às 9h UTC
     - cron: '0 9 * * 4' # Quinta-feira às 9h UTC
-  workflow_dispatch:     # Permite rodar manualmente pelo GitHub
+  workflow_dispatch:
 
 jobs:
   ping:
@@ -12,33 +12,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Supabase database
-        uses: actions/github-script@v7
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Supabase client
+        run: npm install @supabase/supabase-js
+
+      - name: Ping Supabase
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        with:
-          script: |
-            const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2')
-
-            const url = process.env.SUPABASE_URL
-            const key = process.env.SUPABASE_KEY
-
-            if (!url || !key) {
-              core.setFailed('❌ SUPABASE_URL ou SUPABASE_KEY não configurados nos secrets.')
-              return
-            }
-
-            const supabase = createClient(url, key)
-
-            const { data, error } = await supabase
-              .from('settings')
-              .select('key')
-              .limit(1)
-
-            if (error) {
-              core.setFailed(`❌ Ping falhou: ${error.message}`)
-            } else {
-              console.log('✅ Supabase respondeu com sucesso. Projeto ativo.')
-              console.log(`   Dados recebidos: ${JSON.stringify(data)}`)
-            }
+        run: |
+          node -e "
+          const { createClient } = require('@supabase/supabase-js');
+          const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+          supabase.from('settings').select('key').limit(1).then(({ data, error }) => {
+            if (error) { console.error('Ping falhou:', error.message); process.exit(1); }
+            console.log('Supabase ativo. Dados:', JSON.stringify(data));
+          });
+          "
