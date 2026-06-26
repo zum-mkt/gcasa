@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 
@@ -17,8 +16,6 @@ export type Banner = {
   order_index: number
 }
 
-const DISMISSED_KEY = 'gcasa-banner-dismissed-v3'
-
 async function fetchBanners(): Promise<Banner[]> {
   const { data } = await supabase
     .from('banners')
@@ -29,9 +26,6 @@ async function fetchBanners(): Promise<Banner[]> {
 }
 
 export function TopBanner() {
-  const [dismissed, setDismissed] = useState(() =>
-    sessionStorage.getItem(DISMISSED_KEY) === 'true'
-  )
   const [index, setIndex] = useState(0)
 
   const { data: banners = [] } = useQuery({
@@ -40,7 +34,7 @@ export function TopBanner() {
     staleTime: 5 * 60 * 1000,
   })
 
-  const visible = !dismissed && banners.length > 0
+  const visible = banners.length > 0
 
   useEffect(() => {
     if (banners.length <= 1) return
@@ -96,13 +90,6 @@ export function TopBanner() {
         </span>
       )}
 
-      <button
-        onClick={() => { setDismissed(true); sessionStorage.setItem(DISMISSED_KEY, 'true') }}
-        className="absolute right-3 top-3 z-10 p-1 rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors"
-        aria-label="Fechar banner"
-      >
-        <X size={13} />
-      </button>
     </div>
   )
 }
