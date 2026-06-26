@@ -18,7 +18,7 @@ export type Banner = {
   order_index: number
 }
 
-const DISMISSED_KEY = 'gcasa-banner-dismissed-v1'
+const DISMISSED_KEY = 'gcasa-banner-dismissed-v2'
 const HEADER_H = 80
 const BANNER_H = 80
 

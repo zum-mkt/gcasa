@@ -24,7 +24,8 @@ export function Hero() {
 
   const offsetTop = HEADER_H + bannerH
 
-  if (!hero.image_url) return null
+  // always render spacer so fixed header+banner don't overlap the content below
+  if (!hero.image_url) return <div style={{ height: offsetTop }} />
 
   const hasText = !!(hero.title || hero.description)
 
