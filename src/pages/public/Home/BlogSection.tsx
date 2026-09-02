@@ -38,15 +38,15 @@ export function BlogSection() {
         >
           <div>
             <span className="section-label mb-4 block">INSIGHTS PARA O SETOR</span>
-            <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance">
-              Conteúdos que<br />inspiram e informam.
+            <h2 className="text-3xl lg:text-[2.75rem] heading-editorial text-graphite-900 text-balance">
+              Notícias e dicas para a loja.
             </h2>
           </div>
           <Link
             to="/blog"
-            className="inline-flex items-center gap-2 text-base font-bold text-graphite-800 hover:text-primary-600 border-b-2 border-graphite-300 hover:border-primary-400 pb-0.5 transition-colors self-start lg:self-auto whitespace-nowrap"
+            className="inline-flex items-center gap-2 text-lg font-extrabold text-graphite-900 hover:text-primary-600 border-b-4 border-primary-500 pb-0.5 transition-colors self-start lg:self-auto whitespace-nowrap"
           >
-            Ver todos os conteúdos <ArrowRight size={15} />
+            Ver todos os conteúdos <ArrowRight size={20} />
           </Link>
         </motion.div>
 
@@ -68,11 +68,11 @@ export function BlogSection() {
             </div>
             <div className="p-6">
               {main.category && (
-                <span className="text-xs font-extrabold uppercase tracking-wide text-primary-500 mb-2 block">{main.category.name}</span>
+                <span className="text-sm font-extrabold uppercase text-primary-600 mb-2 block">{main.category.name}</span>
               )}
-              <h3 className="text-xl heading-editorial text-graphite-900 line-clamp-2 group-hover:text-primary-600 transition-colors">{main.title}</h3>
-              {main.excerpt && <p className="text-base text-graphite-700 mt-2 line-clamp-2">{main.excerpt}</p>}
-              <div className="flex items-center gap-3 mt-4 text-xs text-graphite-600 font-medium">
+              <h3 className="text-2xl heading-editorial text-graphite-900 line-clamp-2 group-hover:text-primary-600 transition-colors">{main.title}</h3>
+              {main.excerpt && <p className="text-lg text-graphite-700 mt-2 line-clamp-2">{main.excerpt}</p>}
+              <div className="flex items-center gap-3 mt-4 text-sm text-graphite-700 font-bold">
                 {main.published_at && <span>{formatDateShort(main.published_at)}</span>}
                 {main.read_time && <span className="flex items-center gap-1"><Clock size={11} /> {main.read_time} min</span>}
               </div>
@@ -101,10 +101,10 @@ export function BlogSection() {
                 </div>
                 <div className="flex-1 min-w-0">
                   {post.category && (
-                    <span className="text-[0.7rem] font-extrabold uppercase tracking-wide text-primary-500 mb-1 block">{post.category.name}</span>
+                    <span className="text-sm font-extrabold uppercase text-primary-600 mb-1 block">{post.category.name}</span>
                   )}
-                  <h3 className="text-base heading-editorial text-graphite-900 line-clamp-2 group-hover:text-primary-600 transition-colors leading-snug">{post.title}</h3>
-                  <div className="flex items-center gap-2 mt-2 text-xs text-graphite-600 font-medium">
+                  <h3 className="text-lg heading-editorial text-graphite-900 line-clamp-2 group-hover:text-primary-600 transition-colors leading-snug">{post.title}</h3>
+                  <div className="flex items-center gap-2 mt-2 text-sm text-graphite-700 font-bold">
                     {post.published_at && <span>{formatDateShort(post.published_at)}</span>}
                     {post.read_time && <span>{post.read_time} min</span>}
                   </div>

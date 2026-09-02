@@ -7,12 +7,12 @@ import { BrandBlocks } from '@/components/layout/BrandBlocks'
 import { revealViewport, slideLeft, imageReveal } from '@/hooks/useScrollAnimation'
 
 const defaultHighlights = [
-  'Troca de experiências e boas práticas',
-  'Capacitação e desenvolvimento',
-  'Inteligência de mercado e tendências',
-  'Inovação e transformação',
-  'Negociação estratégica com fornecedores',
-  'Gestão e performance',
+  'Compra conjunta com fornecedores',
+  'Treinamento da equipe',
+  'Troca entre donos de loja',
+  'Informação de mercado',
+  'Novos produtos e marcas',
+  'Apoio na gestão da loja',
 ]
 
 type AboutContent = {
@@ -28,10 +28,10 @@ async function fetchAbout(): Promise<AboutContent> {
 
 export function QuemSomosSection() {
   const { data: about = {} } = useQuery({ queryKey: ['about-home'], queryFn: fetchAbout })
-  const tag = about.tag ?? 'NOSSO PROPÓSITO'
-  const title = about.title ?? 'Crescemos quando crescemos'
-  const highlight = about.title_highlight ?? 'juntos.'
-  const description = about.description ?? 'A união de empresários fortes cria um ecossistema que gera desenvolvimento, inovação e novas oportunidades para todos.'
+  const tag = about.tag ?? 'O GRUPO'
+  const title = about.title ?? 'Unidos para comprar melhor'
+  const highlight = about.title_highlight ?? 'e vender mais.'
+  const description = about.description ?? 'O GCasa reúne lojas de materiais de construção do interior paulista. Juntos negociamos com fornecedores, treinamos equipes e trocamos o que funciona na prática.'
   const image = about.image_url ?? null
   const highlights = about.highlights ?? defaultHighlights
 
@@ -48,26 +48,23 @@ export function QuemSomosSection() {
             variants={slideLeft}
           >
             <span className="section-label mb-4 block">{tag}</span>
-            <h2 className="text-3xl lg:text-4xl xl:text-5xl heading-editorial text-graphite-900 text-balance">
+            <h2 className="text-3xl lg:text-5xl heading-editorial text-graphite-900 text-balance">
               {title}{' '}
               <em className="not-italic text-primary-500">{highlight}</em>
             </h2>
-            <p className="mt-5 text-lg text-graphite-700 leading-relaxed max-w-lg">{description}</p>
+            <p className="mt-5 text-xl text-graphite-800 font-medium leading-snug max-w-lg">{description}</p>
 
-            <ul className="mt-7 space-y-3">
+            <ul className="mt-8 grid sm:grid-cols-2 gap-3">
               {highlights.map((b, i) => (
-                <li key={i} className="flex items-start gap-3 text-base text-graphite-800 font-medium">
-                  <span className="w-5 h-[3px] bg-primary-500 flex-shrink-0 mt-2.5" />
+                <li key={i} className="flex items-center gap-3 bg-white border-2 border-graphite-200 px-4 py-3 text-base text-graphite-900 font-bold">
+                  <span className="w-3 h-3 bg-primary-500 flex-shrink-0" />
                   {b}
                 </li>
               ))}
             </ul>
 
-            <Link
-              to="/quem-somos"
-              className="inline-flex items-center gap-2 mt-9 text-base font-bold text-graphite-800 hover:text-primary-600 transition-colors border-b-2 border-graphite-300 hover:border-primary-400 pb-0.5"
-            >
-              Saiba mais sobre o grupo <ArrowRight size={15} />
+            <Link to="/quem-somos" className="btn-obra mt-9">
+              Conheça o grupo <ArrowRight size={20} />
             </Link>
           </motion.div>
 

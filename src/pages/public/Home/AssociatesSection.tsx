@@ -32,7 +32,7 @@ export function AssociatesSection() {
   const scroll = (dir: 'left' | 'right') => {
     const el = scrollRef.current
     if (!el) return
-    el.scrollBy({ left: dir === 'right' ? 320 : -320, behavior: 'smooth' })
+    el.scrollBy({ left: dir === 'right' ? 360 : -360, behavior: 'smooth' })
   }
 
   return (
@@ -47,21 +47,21 @@ export function AssociatesSection() {
         >
           <div>
             <span className="section-label mb-4 block">ASSOCIADOS</span>
-            <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance">
+            <h2 className="text-3xl lg:text-[2.75rem] heading-editorial text-graphite-900 text-balance">
               Uma rede presente em{' '}
               <em className="not-italic text-primary-500">diversas regiões.</em>
             </h2>
-            <p className="mt-3 text-graphite-700 text-base max-w-md">
-              Empresas que acreditam na força da colaboração e no crescimento sustentável do setor.
+            <p className="mt-3 text-graphite-700 text-lg font-medium max-w-md">
+              18 lojas no interior de São Paulo. Clique na loja ou no mapa.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <button onClick={() => scroll('left')} className="w-9 h-9 border border-graphite-200 text-graphite-500 flex items-center justify-center hover:border-graphite-400 hover:text-graphite-900 transition-colors" aria-label="Anterior">
-              <ChevronLeft size={15} />
+            <button onClick={() => scroll('left')} className="w-12 h-12 border-2 border-graphite-300 text-graphite-800 flex items-center justify-center hover:border-graphite-900 hover:bg-white transition-colors" aria-label="Anterior">
+              <ChevronLeft size={22} />
             </button>
-            <button onClick={() => scroll('right')} className="w-9 h-9 border border-graphite-200 text-graphite-500 flex items-center justify-center hover:border-graphite-400 hover:text-graphite-900 transition-colors" aria-label="Próximo">
-              <ChevronRight size={15} />
+            <button onClick={() => scroll('right')} className="w-12 h-12 border-2 border-graphite-300 text-graphite-800 flex items-center justify-center hover:border-graphite-900 hover:bg-white transition-colors" aria-label="Próximo">
+              <ChevronRight size={22} />
             </button>
           </div>
         </motion.div>
@@ -80,9 +80,9 @@ export function AssociatesSection() {
                 key={assoc.id}
                 to={`/associados/${assoc.slug}`}
                 variants={staggerItem}
-                className={`group flex-none w-[300px] flex flex-col bg-white overflow-hidden text-left ${hoverLiftGold}`}
+                className={`group flex-none w-[320px] flex flex-col bg-white border-2 border-graphite-200 overflow-hidden text-left ${hoverLiftGold}`}
               >
-                <div className="h-44 bg-graphite-100 relative overflow-hidden">
+                <div className="h-56 bg-graphite-100 relative overflow-hidden">
                   {assoc.store_image_url ? (
                     <img src={assoc.store_image_url} alt={assoc.name} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out" loading="lazy" />
                   ) : (
@@ -99,21 +99,21 @@ export function AssociatesSection() {
                     </div>
                   )}
                 </div>
-                <div className="p-5 flex-1 flex flex-col border-b-2 border-transparent group-hover:border-primary-500 transition-colors">
-                  <h3 className="text-base font-bold text-graphite-900">{assoc.name}</h3>
+                <div className="p-5 flex-1 flex flex-col">
+                  <h3 className="text-lg font-extrabold text-graphite-900 leading-snug">{assoc.name}</h3>
                   {assoc.city && (
-                    <p className="flex items-center gap-1 text-sm text-graphite-600 mt-1 font-medium">
-                      <MapPin size={12} />
+                    <p className="flex items-center gap-1.5 text-base text-graphite-700 mt-1.5 font-bold">
+                      <MapPin size={16} />
                       {assoc.city}{assoc.state ? ` — ${assoc.state}` : ''}
                     </p>
                   )}
                   {assoc.description && (
-                    <p className="text-sm text-graphite-600 mt-2 line-clamp-2 leading-relaxed">
+                    <p className="text-base text-graphite-700 mt-2 line-clamp-2 leading-snug">
                       {assoc.description}
                     </p>
                   )}
-                  <span className="inline-flex items-center gap-1 mt-auto pt-3 text-xs font-bold text-graphite-700 group-hover:text-primary-600 transition-colors tracking-wide uppercase">
-                    Ver detalhes <ArrowRight size={12} />
+                  <span className="inline-flex items-center gap-2 mt-auto pt-4 text-base font-extrabold text-graphite-900 group-hover:text-primary-600 transition-colors">
+                    Ver loja <ArrowRight size={18} />
                   </span>
                 </div>
               </MotionLink>

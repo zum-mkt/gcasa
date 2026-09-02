@@ -70,14 +70,12 @@ async function fetchHero(): Promise<HeroContent> {
 }
 
 const defaultHero: HeroContent = {
-  tag: 'REDE EMPRESARIAL DO SETOR DE CONSTRUÇÃO',
-  title: 'Construindo empresas mais fortes através da',
-  title_highlight: 'colaboração.',
-  description: 'O Grupo GCasa reúne empresários do setor de materiais de construção para gerar desenvolvimento, compartilhar conhecimento e fortalecer resultados.',
+  tag: 'REDE DE LOJAS DE CONSTRUÇÃO',
+  title: 'Uma rede de lojas mais forte.',
+  title_highlight: '',
+  description: '10 empresas e 18 lojas no interior de São Paulo. Compra conjunta, treinamento e troca entre donos de loja.',
   cta_primary_label: 'Quero me Associar',
   cta_primary_href: '/quero-me-associar',
-  cta_secondary_label: 'Conheça o Grupo',
-  cta_secondary_href: '/quem-somos',
 }
 
 /* Reaproveita as fotos que o admin já cadastra em Quem Somos/Benefícios pra compor o
@@ -241,7 +239,7 @@ export function Hero() {
       />
 
       {/* Texto sobreposto, alinhado à esquerda */}
-      <div className="container-site relative z-10 py-24">
+      <div className="container-site relative z-10 py-20 md:py-24 pb-28">
         <div className="max-w-2xl">
           {content.tag && (
             <motion.p custom={0} variants={fadeUp} initial="hidden" animate="show" className="section-label-light mb-4">
@@ -254,7 +252,7 @@ export function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="text-4xl md:text-5xl lg:text-[3.5rem] heading-editorial text-white leading-[1.18] text-balance"
+            className="text-4xl sm:text-5xl lg:text-6xl heading-editorial text-white leading-[1.08] text-balance"
           >
             {content.title}
             {content.title_highlight && (
@@ -263,37 +261,28 @@ export function Hero() {
           </motion.h1>
 
           {content.description && (
-            <motion.p custom={1} variants={fadeUp} initial="hidden" animate="show" className="mt-6 text-lg text-white/85 leading-relaxed max-w-xl">
+            <motion.p custom={1} variants={fadeUp} initial="hidden" animate="show" className="mt-6 text-xl md:text-2xl text-white font-medium leading-snug max-w-xl">
               {content.description}
             </motion.p>
           )}
 
-          <motion.div custom={2} variants={fadeUp} initial="hidden" animate="show" className="mt-8 flex flex-wrap gap-4">
+          <motion.div custom={2} variants={fadeUp} initial="hidden" animate="show" className="mt-10">
             <Link
               to={content.cta_primary_href ?? '/quero-me-associar'}
               onMouseEnter={() => prefetchRoute(content.cta_primary_href ?? '/quero-me-associar')}
               onFocus={() => prefetchRoute(content.cta_primary_href ?? '/quero-me-associar')}
               onTouchStart={() => prefetchRoute(content.cta_primary_href ?? '/quero-me-associar')}
-              className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-graphite-900 font-bold px-8 py-4 transition-colors text-base tracking-wide shadow-card"
+              className="btn-obra shadow-card"
             >
-              {content.cta_primary_label}
-              <ArrowRight size={16} />
-            </Link>
-            <Link
-              to={content.cta_secondary_href ?? '/quem-somos'}
-              onMouseEnter={() => prefetchRoute(content.cta_secondary_href ?? '/quem-somos')}
-              onFocus={() => prefetchRoute(content.cta_secondary_href ?? '/quem-somos')}
-              onTouchStart={() => prefetchRoute(content.cta_secondary_href ?? '/quem-somos')}
-              className="inline-flex items-center gap-2 text-white hover:text-white/80 font-bold px-8 py-4 border-2 border-white/50 hover:border-white transition-colors text-base"
-            >
-              {content.cta_secondary_label}
+              {content.cta_primary_label ?? 'Quero me Associar'}
+              <ArrowRight size={22} />
             </Link>
           </motion.div>
         </div>
       </div>
 
       {/* Blocos da marca — entram com bounce, depois flutuam devagar */}
-      <div ref={blocksRef} className="absolute bottom-28 left-8 z-10 hidden md:block opacity-0">
+      <div ref={blocksRef} className="absolute bottom-10 left-6 z-[2] pointer-events-none hidden xl:block opacity-0">
         <motion.div
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 2.2 }}

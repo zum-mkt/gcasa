@@ -114,7 +114,7 @@ export function Footer() {
 
           {/* Nav columns */}
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Navegação</p>
+            <p className="text-sm font-extrabold uppercase text-white mb-4">Navegação</p>
             <ul className="space-y-2.5">
               {navigation.grupo.map((item) => (
                 <li key={item.href}>
@@ -125,7 +125,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Institucional</p>
+            <p className="text-sm font-extrabold uppercase text-white mb-4">Institucional</p>
             <ul className="space-y-2.5">
               {navigation.institucional.map((item) => (
                 <li key={item.href}>
@@ -136,7 +136,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Associados</p>
+            <p className="text-sm font-extrabold uppercase text-white mb-4">Associados</p>
             <ul className="space-y-2.5">
               {navigation.associados.map((item) => (
                 <li key={item.href}>
@@ -148,7 +148,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Fale Conosco</p>
+            <p className="text-sm font-extrabold uppercase text-white mb-4">Fale Conosco</p>
             <ul className="space-y-3">
               {phone && (
                 <li>

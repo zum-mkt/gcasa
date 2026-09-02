@@ -39,11 +39,11 @@
 
   --color-offwhite: #F7F7F6;
 
-  /* Manual: ACIER BAT nos títulos; Ariana Pro Book + Jost Regular no texto.
-     Jost já está licenciada/hospedada. ACIER BAT ainda não — Fraunces entra
-     como substituta de display (serif de alto contraste, óptica para títulos). */
+  /* Manual: ACIER BAT nos títulos (licenciada, ainda sem arquivo).
+     Enquanto isso, títulos usam Jost ExtraBold — mesma família do corpo,
+     peso de placa de obra, leitura imediata para lojista. */
   --font-sans: "Jost", "Ariana Pro", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces", "Acier BAT", Georgia, "Times New Roman", serif;
+  --font-display: "Jost", "Ariana Pro", ui-sans-serif, system-ui, sans-serif;
 
   --shadow-card: 0 1px 2px rgba(13,34,40,0.04), 0 8px 24px rgba(13,34,40,0.06);
   --shadow-dropdown: 0 8px 32px rgba(13,34,40,0.12), 0 2px 8px rgba(13,34,40,0.06);
@@ -59,24 +59,7 @@
     src: url("/assets/fonts/jost-variable.woff2") format("woff2-variations"), url("/assets/fonts/jost-variable.woff2") format("woff2");
   }
 
-  /* Fraunces — substituta de ACIER BAT (títulos/campanhas) até a fonte licenciada chegar.
-     Serif de alto contraste, óptica, bem mais próxima do manual do que a Anton. */
-  @font-face {
-    font-family: "Fraunces";
-    font-style: normal;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url("/assets/fonts/fraunces-latin-ext.woff2") format("woff2");
-    unicode-range: U+0100-02BA, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0;
-  }
-  @font-face {
-    font-family: "Fraunces";
-    font-style: normal;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url("/assets/fonts/fraunces-latin.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F;
-  }
+  /* Fraunces ficou de reserva. Títulos passaram para Jost ExtraBold. */
 
   /* ACIER BAT e Ariana Pro Book — fontes pagas do manual. Quando os .woff2
      licenciados chegarem, colocar em /public/assets/fonts/ e descomentar. */
@@ -113,10 +96,11 @@
     margin: 0;
     padding: 0;
     font-family: var(--font-sans);
-    color: #2F2F2E;
+    color: #1C3338;
     background: #ffffff;
-    line-height: 1.65;
-    font-size: 1.0625rem;
+    line-height: 1.5;
+    font-size: 1.125rem;
+    font-weight: 500;
   }
 
   #root {
@@ -132,18 +116,20 @@
 
   h1 {
     font-family: var(--font-display);
-    line-height: 1.18;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
     color: #0D2228;
     margin: 0;
-    font-weight: 400;
+    font-weight: 800;
   }
 
   h2, h3, h4, h5, h6 {
-    font-family: var(--font-sans);
-    line-height: 1.3;
+    font-family: var(--font-display);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
     color: #0D2228;
     margin: 0;
-    font-weight: 600;
+    font-weight: 800;
   }
 
   p { margin: 0; }
@@ -157,17 +143,17 @@
   .section-label {
     display: inline-flex !important;
     align-items: center;
-    gap: 0.55rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
+    gap: 0.6rem;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #575756;
+    color: #0D2228;
   }
   .section-label::before {
     content: "";
-    width: 10px;
-    height: 10px;
+    width: 14px;
+    height: 14px;
     background: #F9B233;
     flex-shrink: 0;
   }
@@ -175,17 +161,17 @@
   .section-label-light {
     display: inline-flex !important;
     align-items: center;
-    gap: 0.55rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
+    gap: 0.6rem;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.78);
+    color: #ffffff;
   }
   .section-label-light::before {
     content: "";
-    width: 10px;
-    height: 10px;
+    width: 14px;
+    height: 14px;
     background: #F9B233;
     flex-shrink: 0;
   }
@@ -194,7 +180,12 @@
     width: 100%;
     max-width: 1240px;
     margin-inline: auto;
-    padding-inline: 2rem;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-site {
+      padding-inline: 2rem;
+    }
   }
 
   .text-balance {
@@ -211,10 +202,33 @@
 
   .heading-editorial {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-optical-sizing: auto;
-    letter-spacing: -0.015em;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .btn-obra {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: #F9B233;
+    color: #0D2228;
+    font-weight: 800;
+    font-size: 1.125rem;
     line-height: 1.2;
+    padding: 1.05rem 1.75rem;
+    min-height: 56px;
+    letter-spacing: 0.01em;
+    transition: background-color 0.15s ease;
+  }
+  .btn-obra:hover {
+    background: #E09A1C;
+  }
+  @media (max-width: 640px) {
+    .btn-obra {
+      max-width: calc(100% - 4.25rem);
+    }
   }
 
   /* Textura de concreto discreta — gerada via CSS/SVG, sem asset externo */

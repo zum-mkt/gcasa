@@ -66,8 +66,8 @@ export function TestimonialsSection() {
           {/* Left */}
           <motion.div initial="hidden" whileInView="show" viewport={revealViewport} variants={slideLeft}>
             <span className="section-label-light mb-4 block">DEPOIMENTOS</span>
-            <h2 className="text-3xl lg:text-4xl heading-editorial text-white text-balance">
-              O que os associados dizem sobre o grupo
+            <h2 className="text-3xl lg:text-[2.75rem] heading-editorial text-white text-balance">
+              O que os associados falam
             </h2>
             {/* Orange divider */}
             <div className="w-12 h-1 bg-primary-500 mt-7 mb-7" />
@@ -79,7 +79,7 @@ export function TestimonialsSection() {
               >
                 <ChevronLeft size={18} />
               </button>
-              <span className="text-sm text-white/60 font-bold tabular-nums">
+              <span className="text-base text-white font-extrabold tabular-nums">
                 {String(current + 1).padStart(2, '0')} / {String(testimonials.length).padStart(2, '0')}
               </span>
               <button
@@ -105,7 +105,7 @@ export function TestimonialsSection() {
               {/* Large decorative quote mark */}
               <span className="absolute -top-8 -left-2 text-[7rem] leading-none text-primary-500/30 font-serif select-none pointer-events-none">"</span>
 
-              <p className="text-xl lg:text-[1.65rem] heading-editorial text-white leading-[1.45] relative z-10">
+              <p className="text-xl lg:text-2xl font-medium text-white leading-snug relative z-10">
                 {t.text}
               </p>
 
@@ -118,9 +118,9 @@ export function TestimonialsSection() {
                   )}
                 </div>
                 <div>
-                  <p className="font-bold text-white text-base">{t.author_name}</p>
+                  <p className="font-extrabold text-white text-lg">{t.author_name}</p>
                   {(t.author_role || t.company) && (
-                    <p className="text-sm text-white/60 mt-0.5 font-medium">
+                    <p className="text-base text-white/80 mt-0.5 font-medium">
                       {[t.author_role, t.company].filter(Boolean).join(' · ')}
                     </p>
                   )}

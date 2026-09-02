@@ -6,12 +6,12 @@ import { supabase } from '@/lib/supabase'
 import { revealViewport, slideLeft, imageReveal, staggerContainer, staggerItem } from '@/hooks/useScrollAnimation'
 
 const defaultItems = [
-  { title: 'Inteligência de Mercado', description: 'Acesso a dados, indicadores e análises exclusivas do setor de materiais de construção.' },
-  { title: 'Networking Estratégico', description: 'Conexão direta com empresários, líderes e tomadores de decisão do mercado.' },
-  { title: 'Poder de Negociação', description: 'Melhores condições comerciais com fornecedores pela força do grupo.' },
-  { title: 'Capacitação Contínua', description: 'Treinamentos, workshops e programas de desenvolvimento para sua equipe.' },
-  { title: 'Inovação Aplicada', description: 'Acesso antecipado a novas soluções, tecnologias e metodologias do setor.' },
-  { title: 'Gestão e Performance', description: 'Ferramentas e suporte especializado para evoluir seus resultados.' },
+  { title: 'Compra conjunta', description: 'Melhor preço e condição com fornecedores, pela força do grupo.' },
+  { title: 'Troca entre lojistas', description: 'Conversa direta com quem também tem loja de construção.' },
+  { title: 'Treinamento da equipe', description: 'Cursos e encontros para quem atende e quem gerencia.' },
+  { title: 'Informação de mercado', description: 'Números e tendências do setor, sem enrolação.' },
+  { title: 'Novidades do setor', description: 'Acesso a produtos, marcas e jeitos novos de vender.' },
+  { title: 'Gestão da loja', description: 'Ferramentas e apoio para organizar o resultado.' },
 ]
 
 type BenefitItem = { icon?: string; title: string; description: string }
@@ -26,8 +26,8 @@ async function fetchBenefits(): Promise<BenefitsContent> {
 export function Benefits() {
   const { data } = useQuery({ queryKey: ['benefits-home'], queryFn: fetchBenefits })
   const items = data?.items ?? defaultItems
-  const title = data?.title ?? 'Por que fazer parte do Grupo GCasa?'
-  const tag = data?.tag ?? 'BENEFÍCIOS'
+  const title = data?.title ?? 'O que sua loja ganha no grupo'
+  const tag = data?.tag ?? 'VANTAGENS'
   const imageUrl = data?.image_url ?? null
 
   return (
@@ -53,11 +53,11 @@ export function Benefits() {
           <div className="absolute top-0 right-0 w-1 h-24 bg-primary-500" />
         </motion.div>
 
-        {/* Right — editorial list */}
-        <div className="flex flex-col justify-center px-8 py-12 lg:px-16 bg-offwhite">
+        {/* Right — cards sólidos */}
+        <div className="flex flex-col justify-center px-6 py-12 lg:px-12 bg-offwhite">
           <motion.div initial="hidden" whileInView="show" viewport={revealViewport} variants={slideLeft}>
             <span className="section-label mb-4 block">{tag}</span>
-            <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance mb-8">
+            <h2 className="text-3xl lg:text-[2.75rem] heading-editorial text-graphite-900 text-balance mb-8">
               {title}
             </h2>
           </motion.div>
@@ -66,31 +66,26 @@ export function Benefits() {
             initial="hidden"
             whileInView="show"
             viewport={revealViewport}
-            variants={staggerContainer(0.08)}
-            className="space-y-0"
+            variants={staggerContainer(0.06)}
+            className="grid sm:grid-cols-2 gap-3"
           >
             {items.map((b, i) => (
               <motion.li
                 key={b.title}
                 variants={staggerItem}
-                className="flex gap-5 py-4 border-b border-graphite-200 last:border-0"
+                className="bg-white border-2 border-graphite-200 p-5"
               >
-                <span className="text-sm text-primary-500 font-extrabold tracking-widest mt-0.5 w-6 flex-shrink-0 tabular-nums">
-                  {String(i + 1).padStart(2, '0')}
+                <span className="inline-flex w-9 h-9 items-center justify-center bg-primary-500 text-graphite-900 font-extrabold text-base mb-3">
+                  {i + 1}
                 </span>
-                <div>
-                  <p className="text-base font-bold text-graphite-900 mb-1">{b.title}</p>
-                  <p className="text-sm text-graphite-700 leading-relaxed">{b.description}</p>
-                </div>
+                <p className="text-lg font-extrabold text-graphite-900 leading-snug">{b.title}</p>
+                <p className="text-base text-graphite-700 mt-1.5 leading-snug">{b.description}</p>
               </motion.li>
             ))}
           </motion.ul>
 
-          <Link
-            to="/quero-me-associar"
-            className="inline-flex items-center gap-2 mt-8 text-base font-bold text-primary-600 hover:text-primary-700 transition-colors self-start"
-          >
-            Quero me associar <ArrowRight size={16} />
+          <Link to="/quero-me-associar" className="btn-obra mt-8 self-start">
+            Quero me associar <ArrowRight size={20} />
           </Link>
         </div>
       </div>

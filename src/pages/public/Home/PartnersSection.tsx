@@ -40,8 +40,8 @@ export function PartnersSection() {
         >
           <div>
             <span className="section-label mb-4 block">PARCEIROS E FORNECEDORES</span>
-            <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance">
-              Marcas que acreditam<br />na força da nossa rede.
+            <h2 className="text-3xl lg:text-[2.75rem] heading-editorial text-graphite-900 text-balance">
+              Fornecedores da nossa rede.
             </h2>
           </div>
           <button
@@ -49,9 +49,9 @@ export function PartnersSection() {
               const el = document.getElementById('contato')
               if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' })
             }}
-            className="inline-flex items-center gap-2 text-base font-bold text-graphite-800 hover:text-primary-600 border-b-2 border-graphite-300 hover:border-primary-400 pb-0.5 transition-colors self-start lg:self-auto whitespace-nowrap"
+            className="inline-flex items-center gap-2 text-lg font-extrabold text-graphite-900 hover:text-primary-600 border-b-4 border-primary-500 pb-0.5 transition-colors self-start lg:self-auto whitespace-nowrap"
           >
-            Seja um parceiro <ArrowRight size={15} />
+            Seja um parceiro <ArrowRight size={20} />
           </button>
         </motion.div>
 
@@ -75,7 +75,7 @@ export function PartnersSection() {
                 key={p.id}
                 variants={staggerItem}
                 onClick={() => setSelected(p)}
-                className={`group text-center bg-white border border-graphite-100 shadow-sm overflow-hidden flex flex-col items-center justify-center gap-4 h-40 px-8 ${hoverLiftGold}`}
+                className={`group text-center bg-white border-2 border-graphite-200 overflow-hidden flex flex-col items-center justify-center gap-4 h-44 px-6 ${hoverLiftGold}`}
                 title={p.name}
               >
                 <div className="h-12 w-full flex items-center justify-center">
@@ -87,7 +87,7 @@ export function PartnersSection() {
                     <span className="text-2xl heading-editorial text-graphite-300 select-none">{p.name[0]}</span>
                   )}
                 </div>
-                <span className="text-xs font-bold text-graphite-600 group-hover:text-primary-600 transition-colors tracking-wide">{p.name}</span>
+                <span className="text-sm font-extrabold text-graphite-800 group-hover:text-primary-600 transition-colors">{p.name}</span>
               </motion.button>
             ))}
           </motion.div>

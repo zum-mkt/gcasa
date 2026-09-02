@@ -90,18 +90,18 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
       for (const store of STORE_LOCATIONS) {
         const associate = matchAssociate(store, associatesRef.current)
         const profile = associate
-          ? `<a href="/associados/${associate.slug}" style="color:#C0821A;font-weight:700;font-size:12px;text-decoration:none">Ver perfil da loja →</a>`
-          : `<a href="${mapsUrl(store)}" target="_blank" rel="noreferrer" style="color:#C0821A;font-weight:700;font-size:12px;text-decoration:none">Como chegar →</a>`
+          ? `<a href="/associados/${associate.slug}" style="color:#C07F14;font-weight:800;font-size:15px;text-decoration:none">Ver loja →</a>`
+          : `<a href="${mapsUrl(store)}" target="_blank" rel="noreferrer" style="color:#C07F14;font-weight:800;font-size:15px;text-decoration:none">Como chegar →</a>`
 
         L.marker([store.lat, store.lng], { icon, title: `${store.name} — ${store.city}` })
           .bindPopup(
-            `<div style="min-width:180px;font-family:inherit">
-              <p style="margin:0 0 2px;font-weight:800;color:#3D3B3B;font-size:14px">${store.name}</p>
-              <p style="margin:0 0 6px;color:#757272;font-size:12px;font-weight:600">${store.city} — ${store.state}</p>
-              <p style="margin:0 0 8px;color:#5A5858;font-size:12px;line-height:1.4">${store.address}</p>
+            `<div style="min-width:200px;font-family:inherit">
+              <p style="margin:0 0 2px;font-weight:800;color:#0D2228;font-size:16px">${store.name}</p>
+              <p style="margin:0 0 6px;color:#0D2228;font-size:14px;font-weight:700">${store.city} — ${store.state}</p>
+              <p style="margin:0 0 10px;color:#575756;font-size:14px;line-height:1.4">${store.address}</p>
               ${profile}
             </div>`,
-            { maxWidth: 260 },
+            { maxWidth: 280 },
           )
           .addTo(map)
 
@@ -169,7 +169,7 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
           type="button"
           onClick={() => setMode('map')}
           className={cn(
-            'px-3 py-1.5 text-sm font-medium transition-colors',
+            'px-4 py-2 text-base font-bold transition-colors',
             mode === 'map' ? 'bg-white text-graphite-900' : 'bg-white/90 text-graphite-600 hover:bg-white',
           )}
         >
@@ -179,7 +179,7 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
           type="button"
           onClick={() => setMode('sat')}
           className={cn(
-            'px-3 py-1.5 text-sm font-medium border-l border-graphite-200 transition-colors',
+            'px-4 py-2 text-base font-bold border-l border-graphite-200 transition-colors',
             mode === 'sat' ? 'bg-white text-graphite-900' : 'bg-white/90 text-graphite-600 hover:bg-white',
           )}
         >

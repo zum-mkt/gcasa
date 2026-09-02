@@ -40,21 +40,21 @@ function EventCard({ event, large = false }: { event: GcasaEvent; large?: boolea
 
       <div className="absolute bottom-0 left-0 right-0 p-5">
         {event.date && (
-          <span className="text-xs text-primary-400 font-extrabold tracking-wide uppercase mb-2 block">
+          <span className="text-sm text-primary-400 font-extrabold mb-2 block">
             {formatDateShort(event.date)}
           </span>
         )}
-        <h3 className={`heading-editorial text-white text-balance leading-tight ${large ? 'text-2xl' : 'text-base'}`}>
+        <h3 className={`heading-editorial text-white text-balance leading-tight ${large ? 'text-3xl' : 'text-lg'}`}>
           {event.title}
         </h3>
         {event.location && (
-          <p className="flex items-center gap-1 text-xs text-white/70 mt-2 font-medium">
-            <MapPin size={11} />
+          <p className="flex items-center gap-1.5 text-sm text-white font-bold mt-2">
+            <MapPin size={14} />
             {event.location}
           </p>
         )}
-        <span className="inline-flex items-center gap-1.5 mt-3 text-xs text-white/90 group-hover:text-primary-400 font-bold tracking-wide uppercase transition-colors">
-          Saiba mais <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+        <span className="inline-flex items-center gap-1.5 mt-3 text-base text-white group-hover:text-primary-400 font-extrabold transition-colors">
+          Ver evento <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
         </span>
       </div>
     </MotionLink>
@@ -81,15 +81,15 @@ export function EventsSection() {
         >
           <div>
             <span className="section-label mb-4 block">EVENTOS E CAPACITAÇÕES</span>
-            <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance">
-              Conhecimento que<br />gera resultado.
+            <h2 className="text-3xl lg:text-[2.75rem] heading-editorial text-graphite-900 text-balance">
+              Treinamentos e encontros do grupo.
             </h2>
           </div>
           <Link
             to="/eventos"
-            className="inline-flex items-center gap-2 text-base font-bold text-graphite-800 hover:text-primary-600 border-b-2 border-graphite-300 hover:border-primary-400 pb-0.5 transition-colors self-start lg:self-auto"
+            className="inline-flex items-center gap-2 text-lg font-extrabold text-graphite-900 hover:text-primary-600 border-b-4 border-primary-500 pb-0.5 transition-colors self-start lg:self-auto"
           >
-            Ver todos os eventos <ArrowRight size={15} />
+            Ver todos os eventos <ArrowRight size={20} />
           </Link>
         </motion.div>
 

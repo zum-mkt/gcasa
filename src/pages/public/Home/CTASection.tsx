@@ -20,8 +20,8 @@ async function fetchCta(): Promise<CtaContent> {
 
 export function CTASection() {
   const { data: cta = {} } = useQuery({ queryKey: ['cta-home'], queryFn: fetchCta })
-  const title = cta.title ?? 'Sua empresa está pronta para crescer junto com a gente?'
-  const description = cta.description ?? 'Faça parte da maior rede colaborativa do setor de materiais de construção do interior paulista.'
+  const title = cta.title ?? 'Quer associar sua loja ao GCasa?'
+  const description = cta.description ?? 'Explicamos como funciona, o que você precisa e o próximo passo.'
   const primaryLabel = cta.cta_primary_label ?? 'Quero me Associar'
   const primaryHref = cta.cta_primary_href ?? '/quero-me-associar'
   const secondaryLabel = cta.cta_secondary_label ?? 'Falar com um especialista'
@@ -44,10 +44,10 @@ export function CTASection() {
           <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary-500 hidden lg:block" />
 
           <span className="section-label-light mb-5">FAÇA PARTE</span>
-          <h2 className="text-3xl lg:text-4xl heading-editorial text-white text-balance leading-tight">
+          <h2 className="text-3xl lg:text-5xl heading-editorial text-white text-balance leading-tight">
             {title}
           </h2>
-          <p className="mt-5 text-lg text-graphite-300 leading-relaxed max-w-sm">
+          <p className="mt-5 text-xl text-white font-medium leading-snug max-w-md">
             {description}
           </p>
         </motion.div>
@@ -60,19 +60,16 @@ export function CTASection() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex flex-col justify-center items-start px-10 py-14 lg:px-16 lg:py-16 gap-4"
         >
-          <Link
-            to={primaryHref}
-            className="inline-flex items-center gap-3 bg-primary-500 hover:bg-primary-600 text-graphite-900 font-bold px-8 py-4 transition-colors text-base tracking-wide w-full max-w-xs justify-between shadow-card"
-          >
+          <Link to={primaryHref} className="btn-obra w-full max-w-sm justify-between shadow-card">
             {primaryLabel}
-            <ArrowRight size={18} />
+            <ArrowRight size={22} />
           </Link>
           <Link
             to={secondaryHref}
-            className="inline-flex items-center gap-3 text-white hover:text-primary-400 font-bold px-8 py-4 border-2 border-white/30 hover:border-primary-400 transition-colors text-base w-full max-w-xs justify-between"
+            className="inline-flex items-center gap-3 text-white hover:text-primary-400 font-extrabold px-7 py-4 border-2 border-white hover:border-primary-400 transition-colors text-lg w-full max-w-sm justify-between min-h-14"
           >
             {secondaryLabel}
-            <ArrowRight size={18} />
+            <ArrowRight size={20} />
           </Link>
         </motion.div>
       </div>
