@@ -715,7 +715,7 @@ function PasteListStep({ editionId, associateId, takenFeaturedPages, pageCounts,
   }
 
   const analyzeMutation = useMutation({
-    mutationFn: async (): Promise<{ products: Omit<ParsedDraft, '_id'>[]; usedFallback: boolean }> => {
+    mutationFn: async (): Promise<{ products: Omit<ParsedDraft, '_id'>[]; usedFallback: boolean; reason?: string }> => {
       try {
         const { data: result, error } = await supabase.functions.invoke('parse-tabloid-products', { body: { text } })
         if (error) throw error
@@ -724,18 +724,26 @@ function PasteListStep({ editionId, associateId, takenFeaturedPages, pageCounts,
         // associado anexa (ou não) na revisão logo abaixo.
         const products = (result.products as Omit<ParsedDraft, '_id' | 'image_url'>[]).map((p) => ({ ...p, image_url: null }))
         return { products, usedFallback: false }
-      } catch {
-        // IA indisponível — não trava o associado, cai pro parser local.
-        return { products: parseTabloidText(text), usedFallback: true }
+      } catch (e) {
+        // IA indisponível — não trava o associado, cai pro parser local. Mas
+        // guarda o motivo real: sem isso, todo erro da IA (modelo aposentado,
+        // chave sem cota) vira "não entendeu minha lista" e ninguém percebe o
+        // que de fato quebrou.
+        const reason = e instanceof Error ? e.message : String(e)
+        console.warn('[parse-tabloid-products] IA falhou, caindo no parser local:', reason)
+        return { products: parseTabloidText(text), usedFallback: true, reason }
       }
     },
-    onSuccess: ({ products, usedFallback }) => {
+    onSuccess: ({ products, usedFallback, reason }) => {
       if (usedFallback) {
         toast.error(
           'IA indisponível no momento',
-          products.length > 0
-            ? 'Usei uma leitura mais simples da lista — confira os produtos com atenção.'
-            : 'E a leitura simples também não achou produtos. Confira se cada preço tem "R$" na frente, ou tente de novo em instantes.'
+          [
+            products.length > 0
+              ? 'Usei uma leitura mais simples da lista — confira os produtos com atenção.'
+              : 'E a leitura simples também não achou produtos. Confira se cada preço tem "R$" na frente, ou tente de novo em instantes.',
+            reason ? `(detalhe técnico: ${reason})` : null,
+          ].filter(Boolean).join(' '),
         )
       } else if (products.length === 0) {
         toast.error('Nenhum produto identificado', 'Tente colar em linhas mais separadas, uma por produto.')

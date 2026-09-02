@@ -100,19 +100,49 @@ Deno.serve(async (req) => {
     }
 
     const ai = new GoogleGenAI({ apiKey: geminiKey })
-    const response = await ai.models.generateContent({
-      // "latest" em vez de fixar uma versão — gemini-2.5-flash parou de
-      // funcionar pra chaves novas (a API evolui rápido), esse alias sempre
-      // aponta pro flash atual do Google (hoje resolve pro gemini-3.6-flash).
-      model: 'gemini-flash-latest',
-      contents: text,
-      config: {
-        systemInstruction: SYSTEM_PROMPT,
-        responseMimeType: 'application/json',
-        responseSchema: parseResultSchema,
-        httpOptions: { timeout: 45_000 },
-      },
-    })
+
+    // Fixar `gemini-flash-latest` foi o que derrubou a IA: o Google aposentou
+    // os modelos pra onde esse alias apontava e ele passou a devolver 404
+    // "model not found" / "no longer available to new users" — e o front
+    // engolia o erro caindo num parser local fraco, então parecia que a IA
+    // "não entendia" a lista. Agora tentamos uma fila de IDs FIXOS, do mais
+    // barato/atual pro alias, e só passamos pro próximo quando o erro é de
+    // modelo (404 / indisponível). Quando um vencedor se firmar, dá pra
+    // enxugar essa lista pra ele + 1 reserva.
+    const MODELS = ['gemini-2.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest']
+
+    const config = {
+      systemInstruction: SYSTEM_PROMPT,
+      responseMimeType: 'application/json',
+      responseSchema: parseResultSchema,
+      httpOptions: { timeout: 45_000 },
+    }
+
+    let response: Awaited<ReturnType<typeof ai.models.generateContent>> | undefined
+    let usedModel = ''
+    let lastModelError = ''
+    for (const model of MODELS) {
+      try {
+        response = await ai.models.generateContent({ model, contents: text, config })
+        usedModel = model
+        break
+      } catch (e) {
+        const status = (e as { status?: number }).status
+        const msg = e instanceof Error ? e.message : String(e)
+        console.error(`[parse-tabloid-products] modelo ${model} falhou (status ${status ?? '?'}): ${msg}`)
+        const isModelIssue = status === 404 || /not found|no longer available|not supported|unsupported/i.test(msg)
+        if (!isModelIssue) {
+          // Cota, chave inválida, safety, timeout — insistir noutro modelo não ajuda.
+          return json({ error: `IA falhou (${model}): ${msg}` }, 200)
+        }
+        lastModelError = `${model}: ${msg}`
+      }
+    }
+
+    if (!response) {
+      return json({ error: `IA sem modelo disponível — última falha: ${lastModelError || 'nenhum modelo respondeu'}` }, 200)
+    }
+    console.log(`[parse-tabloid-products] extração ok com ${usedModel}`)
 
     let parsed: { products?: unknown[] }
     try {
@@ -121,7 +151,7 @@ Deno.serve(async (req) => {
       return json({ error: 'Não consegui interpretar essa lista. Tente colar em linhas mais separadas.' }, 200)
     }
 
-    return json({ products: parsed.products ?? [] })
+    return json({ products: parsed.products ?? [], model: usedModel })
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : 'Erro inesperado.' }, 200)
   }
