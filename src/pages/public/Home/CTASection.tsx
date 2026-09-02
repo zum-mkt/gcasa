@@ -43,7 +43,7 @@ export function CTASection() {
           <div className="absolute top-0 left-0 right-0 h-1 bg-primary-500 lg:hidden" />
           <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary-500 hidden lg:block" />
 
-          <span className="section-label mb-5">FAÇA PARTE</span>
+          <span className="section-label-light mb-5">FAÇA PARTE</span>
           <h2 className="text-3xl lg:text-4xl heading-editorial text-white text-balance leading-tight">
             {title}
           </h2>
@@ -62,7 +62,7 @@ export function CTASection() {
         >
           <Link
             to={primaryHref}
-            className="inline-flex items-center gap-3 bg-primary-500 hover:bg-primary-600 text-white font-bold px-8 py-4 transition-colors text-base tracking-wide w-full max-w-xs justify-between shadow-card"
+            className="inline-flex items-center gap-3 bg-primary-500 hover:bg-primary-600 text-graphite-900 font-bold px-8 py-4 transition-colors text-base tracking-wide w-full max-w-xs justify-between shadow-card"
           >
             {primaryLabel}
             <ArrowRight size={18} />

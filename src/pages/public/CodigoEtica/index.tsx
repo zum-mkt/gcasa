@@ -18,7 +18,7 @@ export default function CodigoEticaPage() {
         </p>
         <Link
           to="/contato"
-          className="inline-flex items-center gap-2 mt-8 bg-primary-500 hover:bg-primary-600 text-white font-bold px-8 py-4 transition-colors text-base"
+          className="inline-flex items-center gap-2 mt-8 bg-primary-500 hover:bg-primary-600 text-graphite-900 font-bold px-8 py-4 transition-colors text-base"
         >
           Falar com a equipe
         </Link>

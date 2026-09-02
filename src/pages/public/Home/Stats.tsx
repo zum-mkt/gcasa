@@ -37,8 +37,8 @@ export function Stats() {
   })
 
   return (
-    <section className="texture-concrete texture-concrete--dark bg-graphite-900">
-      <div className="container-site py-10">
+    <section className="bg-graphite-900">
+      <div className="container-site py-12 lg:py-14">
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -49,13 +49,13 @@ export function Stats() {
           {stats.map((stat, i) => {
             const Icon = statIcons[i % statIcons.length]
             return (
-              <motion.div key={i} variants={staggerItem} className="flex items-center justify-center gap-3 py-5 px-4">
-                <Icon size={22} className="text-primary-500 flex-shrink-0" strokeWidth={2} />
+              <motion.div key={i} variants={staggerItem} className="flex items-center justify-center gap-3 py-6 px-4">
+                <Icon size={20} className="text-primary-500 flex-shrink-0" strokeWidth={1.75} />
                 <div className="text-left">
-                  <p className="text-2xl md:text-3xl heading-editorial text-white tracking-tight">
+                  <p className="text-2xl md:text-[2rem] heading-editorial text-white tracking-tight">
                     <AnimatedNumber value={stat.value} suffix={stat.suffix} />
                   </p>
-                  <p className="text-xs text-graphite-300 mt-0.5 tracking-wide uppercase font-bold">{stat.label}</p>
+                  <p className="text-[0.68rem] text-white/65 mt-1 tracking-[0.14em] uppercase font-medium">{stat.label}</p>
                 </div>
               </motion.div>
             )

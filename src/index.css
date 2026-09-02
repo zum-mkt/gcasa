@@ -2,62 +2,55 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Amarelo/laranja GCasa — paleta oficial da marca (2026) */
-  --color-primary-50:  #FFF8E9;
-  --color-primary-100: #FFEFC9;
-  --color-primary-200: #FDE29B;
-  --color-primary-300: #FDD87A;
-  --color-primary-400: #FCC55A;
-  --color-primary-500: #FAB136;
-  --color-primary-600: #E09A20;
-  --color-primary-700: #C0821A;
-  --color-primary-800: #9A6814;
-  --color-primary-900: #7A5310;
+  /* Amarelo institucional — Manual IDV: Hex F9B233 / RGB 249 178 51 */
+  --color-primary-50:  #FFF8E8;
+  --color-primary-100: #FFEEC4;
+  --color-primary-200: #FDD98A;
+  --color-primary-300: #FCC85A;
+  --color-primary-400: #FBB83D;
+  --color-primary-500: #F9B233;
+  --color-primary-600: #E09A1C;
+  --color-primary-700: #C07F14;
+  --color-primary-800: #9A6410;
+  --color-primary-900: #7A4E0C;
 
-  /* Dourado — destaques e brilhos, mesma família do amarelo/laranja principal */
-  --color-golden-400: #FCC55A;
-  --color-golden-500: #FAB136;
+  --color-golden-400: #FBB83D;
+  --color-golden-500: #F9B233;
 
-  /* Cinza GCasa — fundos escuros (hero / cta / depoimentos), substitui o azul-marinho antigo */
-  --color-dark-950: #302E2E;
-  --color-dark-900: #3D3B3B;
-  --color-dark-800: #4A4848;
-  --color-dark-700: #5A5858;
-  --color-dark-600: #757272;
+  /* Fundos escuros — o tom das capas do manual (verde-preto), não o cinza quente */
+  --color-dark-950: #081416;
+  --color-dark-900: #0D2228;
+  --color-dark-800: #16343B;
+  --color-dark-700: #2A4A50;
+  --color-dark-600: #575756;
 
-  /* Grafite e cinzas — textos e superfícies claras */
-  --color-graphite-950: #302E2E;
-  --color-graphite-900: #3D3B3B;
-  --color-graphite-800: #4A4848;
-  --color-graphite-700: #5A5858;
-  --color-graphite-600: #656363;
-  --color-graphite-500: #757272;
-  --color-graphite-400: #979492;
-  --color-graphite-300: #B8B5B1;
-  --color-graphite-200: #D6D3CF;
-  --color-graphite-100: #E8E6E3;
-  --color-graphite-50:  #F5F3F0;
+  /* Cinza institucional Hex 575756 + escala fria para leitura */
+  --color-graphite-950: #081416;
+  --color-graphite-900: #0D2228;
+  --color-graphite-800: #1C3338;
+  --color-graphite-700: #575756;
+  --color-graphite-600: #6E6E6D;
+  --color-graphite-500: #8A8A89;
+  --color-graphite-400: #A8A8A7;
+  --color-graphite-300: #C8C8C7;
+  --color-graphite-200: #E2E2E1;
+  --color-graphite-100: #F0F0EF;
+  --color-graphite-50:  #F7F7F6;
 
-  /* Off-white */
-  --color-offwhite: #F5F3F0;
+  --color-offwhite: #F7F7F6;
 
-  /* Typography — conforme o Manual de Identidade: ACIER BAT (títulos/campanhas),
-     Ariana Pro Book + Jost Regular (texto). Ariana Pro e Acier BAT são fontes pagas
-     que ainda não temos licenciadas no projeto — assim que os arquivos chegarem, é só
-     descomentar o @font-face correspondente (abaixo) que essas duas entram sozinhas,
-     sem precisar mexer aqui. Até lá, uso substitutas do Google Fonts com espírito
-     parecido: Anton (geométrica, black, para títulos de impacto) e Poppins
-     (geométrica arredondada, para texto) — ambas já auto-hospedadas. */
-  --font-sans: "Ariana Pro", "Poppins", "Jost", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Acier BAT", "Anton", "Jost", ui-sans-serif, system-ui, sans-serif;
+  /* Manual: ACIER BAT nos títulos; Ariana Pro Book + Jost Regular no texto.
+     Jost já está licenciada/hospedada. ACIER BAT ainda não — Fraunces entra
+     como substituta de display (serif de alto contraste, óptica para títulos). */
+  --font-sans: "Jost", "Ariana Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Acier BAT", Georgia, "Times New Roman", serif;
 
-  /* Shadows */
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-  --shadow-dropdown: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+  --shadow-card: 0 1px 2px rgba(13,34,40,0.04), 0 8px 24px rgba(13,34,40,0.06);
+  --shadow-dropdown: 0 8px 32px rgba(13,34,40,0.12), 0 2px 8px rgba(13,34,40,0.06);
 }
 
 @layer base {
-  /* Jost — fonte variável, grátis (SIL OFL), auto-hospedada. Cobre pesos 100–900. */
+  /* Jost Regular — texto do Manual de IDV (SIL OFL, auto-hospedada). */
   @font-face {
     font-family: "Jost";
     font-weight: 100 900;
@@ -66,56 +59,27 @@
     src: url("/assets/fonts/jost-variable.woff2") format("woff2-variations"), url("/assets/fonts/jost-variable.woff2") format("woff2");
   }
 
-  /* Anton — substituta grátis (Google Fonts) pra ACIER BAT enquanto não temos a licenciada */
+  /* Fraunces — substituta de ACIER BAT (títulos/campanhas) até a fonte licenciada chegar.
+     Serif de alto contraste, óptica, bem mais próxima do manual do que a Anton. */
   @font-face {
-    font-family: "Anton";
-    font-weight: 400;
+    font-family: "Fraunces";
     font-style: normal;
+    font-weight: 400 600;
     font-display: swap;
-    src: url("/assets/fonts/anton-400.woff2") format("woff2");
+    src: url("/assets/fonts/fraunces-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0;
+  }
+  @font-face {
+    font-family: "Fraunces";
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url("/assets/fonts/fraunces-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F;
   }
 
-  /* Poppins — substituta grátis (Google Fonts) pra Ariana Pro Book enquanto não temos a licenciada */
-  @font-face {
-    font-family: "Poppins";
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-    src: url("/assets/fonts/poppins-300.woff2") format("woff2");
-  }
-  @font-face {
-    font-family: "Poppins";
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    src: url("/assets/fonts/poppins-400.woff2") format("woff2");
-  }
-  @font-face {
-    font-family: "Poppins";
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-    src: url("/assets/fonts/poppins-500.woff2") format("woff2");
-  }
-  @font-face {
-    font-family: "Poppins";
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-    src: url("/assets/fonts/poppins-600.woff2") format("woff2");
-  }
-  @font-face {
-    font-family: "Poppins";
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-    src: url("/assets/fonts/poppins-700.woff2") format("woff2");
-  }
-
-  /* ACIER BAT (títulos) e Ariana Pro Book (texto) são fontes pagas do Manual de
-     Identidade — ainda não temos os arquivos licenciados no projeto. Assim que
-     chegarem (.woff2 de preferência), colocar em /public/assets/fonts/ e
-     descomentar os blocos abaixo com o nome de arquivo correto. */
+  /* ACIER BAT e Ariana Pro Book — fontes pagas do manual. Quando os .woff2
+     licenciados chegarem, colocar em /public/assets/fonts/ e descomentar. */
   /*
   @font-face {
     font-family: "Acier BAT";
@@ -124,7 +88,6 @@
     font-display: swap;
     src: url("/assets/fonts/acier-bat.woff2") format("woff2");
   }
-
   @font-face {
     font-family: "Ariana Pro";
     font-weight: 400;
@@ -150,9 +113,10 @@
     margin: 0;
     padding: 0;
     font-family: var(--font-sans);
-    color: #3D3B3B;
+    color: #2F2F2E;
     background: #ffffff;
-    line-height: 1.7;
+    line-height: 1.65;
+    font-size: 1.0625rem;
   }
 
   #root {
@@ -162,21 +126,14 @@
   }
 
   ::selection {
-    background-color: #FAB136;
-    color: #3D3B3B;
+    background-color: #F9B233;
+    color: #0D2228;
   }
 
-  /* Anton/Acier BAT são fontes de DISPLAY — feitas pra títulos grandes de impacto
-     ("TÍTULOS/CAMPANHAS" no manual da marca). Em títulos pequenos (cards, labels,
-     subtítulos de modal) elas ficam condensadas/pesadas demais e prejudicam a
-     leitura. Por isso só h1 usa a fonte de display por padrão; h2–h6 usam a fonte
-     de texto (Poppins/Ariana Pro) em negrito — ainda com hierarquia visual clara,
-     mas legível em qualquer tamanho. Seções que querem o efeito editorial grande
-     usam a classe .heading-editorial explicitamente, independente do nível do h. */
   h1 {
     font-family: var(--font-display);
-    line-height: 1.15;
-    color: #3D3B3B;
+    line-height: 1.18;
+    color: #0D2228;
     margin: 0;
     font-weight: 400;
   }
@@ -184,9 +141,9 @@
   h2, h3, h4, h5, h6 {
     font-family: var(--font-sans);
     line-height: 1.3;
-    color: #3D3B3B;
+    color: #0D2228;
     margin: 0;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   p { margin: 0; }
@@ -198,21 +155,39 @@
 
 @layer utilities {
   .section-label {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #FAB136;
+    color: #575756;
+  }
+  .section-label::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #F9B233;
+    flex-shrink: 0;
   }
 
   .section-label-light {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.78);
+  }
+  .section-label-light::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #F9B233;
+    flex-shrink: 0;
   }
 
   .container-site {
@@ -234,14 +209,11 @@
     display: none;
   }
 
-  /* Heading de destaque — Anton só tem a face 400 registrada (linha ~68); pedir 700/800
-     aqui força o navegador a fazer bold sintético (stroke grosso e borrado), que é
-     justamente o que prejudicava a leitura dos títulos. Anton já é uma fonte black por
-     natureza, então 400 real cobre o peso "forte" que o público de construção espera. */
   .heading-editorial {
     font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: 0;
+    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
     line-height: 1.2;
   }
 
@@ -256,7 +228,7 @@
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.22;
     mix-blend-mode: multiply;
     background-image:
       radial-gradient(circle at 20% 30%, rgba(0,0,0,0.05) 0, transparent 45%),
@@ -265,7 +237,7 @@
   }
   .texture-concrete--dark::before {
     mix-blend-mode: screen;
-    opacity: 0.35;
+    opacity: 0.18;
   }
   .texture-concrete > * {
     position: relative;

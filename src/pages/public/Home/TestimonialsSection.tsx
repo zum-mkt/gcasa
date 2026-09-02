@@ -84,7 +84,7 @@ export function TestimonialsSection() {
               </span>
               <button
                 onClick={next}
-                className="w-11 h-11 bg-primary-500 hover:bg-primary-600 flex items-center justify-center transition-colors"
+                className="w-11 h-11 bg-primary-500 hover:bg-primary-600 text-graphite-900 flex items-center justify-center transition-colors"
                 aria-label="Próximo"
               >
                 <ChevronRight size={18} />
@@ -105,7 +105,7 @@ export function TestimonialsSection() {
               {/* Large decorative quote mark */}
               <span className="absolute -top-8 -left-2 text-[7rem] leading-none text-primary-500/30 font-serif select-none pointer-events-none">"</span>
 
-              <p className="text-xl lg:text-2xl heading-editorial text-white leading-relaxed relative z-10">
+              <p className="text-xl lg:text-[1.65rem] heading-editorial text-white leading-[1.45] relative z-10">
                 {t.text}
               </p>
 

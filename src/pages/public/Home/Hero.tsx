@@ -23,17 +23,17 @@ const particlesOptions: ISourceOptions = {
   background: { color: { value: 'transparent' } },
   fpsLimit: 60,
   particles: {
-    number: { value: 60, density: { enable: true, width: 1200, height: 800 } },
-    color: { value: ['#FAB136', '#FCC55A', '#3D3B3B'] },
+    number: { value: 22, density: { enable: true, width: 1200, height: 800 } },
+    color: { value: ['#F9B233', '#575756'] },
     shape: { type: 'square' },
-    opacity: { value: { min: 0.35, max: 0.85 } },
-    size: { value: { min: 2, max: 5 } },
-    rotate: { value: { min: 0, max: 45 }, animation: { enable: true, speed: 3 } },
+    opacity: { value: { min: 0.12, max: 0.35 } },
+    size: { value: { min: 2, max: 4 } },
+    rotate: { value: { min: 0, max: 45 }, animation: { enable: true, speed: 2 } },
     links: {
       enable: true,
-      distance: 140,
-      color: '#FAB136',
-      opacity: 0.3,
+      distance: 120,
+      color: '#F9B233',
+      opacity: 0.14,
       width: 1,
     },
     move: {
@@ -200,10 +200,8 @@ export function Hero() {
           </motion.div>
         )
       )}
-      {/* Gradiente mais escuro à esquerda (onde o texto fica) e vinheta pra profundidade */}
-      <div className="absolute inset-0 bg-gradient-to-r from-graphite-950/95 via-graphite-950/70 to-graphite-950/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-graphite-950/70 via-transparent to-graphite-950/10" />
-      <div className="absolute inset-0 shadow-[inset_0_0_180px_rgba(0,0,0,0.55)]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0D2228] via-[#0D2228]/82 to-[#0D2228]/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0D2228]/80 via-transparent to-[#0D2228]/25" />
 
       {!isVideo && slides.length > 1 && (
         <div className="absolute top-6 right-6 z-20 flex gap-1.5">
@@ -244,7 +242,7 @@ export function Hero() {
 
       {/* Texto sobreposto, alinhado à esquerda */}
       <div className="container-site relative z-10 py-24">
-        <div className="max-w-xl">
+        <div className="max-w-2xl">
           {content.tag && (
             <motion.p custom={0} variants={fadeUp} initial="hidden" animate="show" className="section-label-light mb-4">
               {content.tag}
@@ -256,7 +254,7 @@ export function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="text-4xl md:text-5xl lg:text-[3.6rem] heading-editorial text-white leading-[1.05] text-balance"
+            className="text-4xl md:text-5xl lg:text-[3.5rem] heading-editorial text-white leading-[1.18] text-balance"
           >
             {content.title}
             {content.title_highlight && (
@@ -265,7 +263,7 @@ export function Hero() {
           </motion.h1>
 
           {content.description && (
-            <motion.p custom={1} variants={fadeUp} initial="hidden" animate="show" className="mt-6 text-lg text-white/80 leading-relaxed">
+            <motion.p custom={1} variants={fadeUp} initial="hidden" animate="show" className="mt-6 text-lg text-white/85 leading-relaxed max-w-xl">
               {content.description}
             </motion.p>
           )}
@@ -276,7 +274,7 @@ export function Hero() {
               onMouseEnter={() => prefetchRoute(content.cta_primary_href ?? '/quero-me-associar')}
               onFocus={() => prefetchRoute(content.cta_primary_href ?? '/quero-me-associar')}
               onTouchStart={() => prefetchRoute(content.cta_primary_href ?? '/quero-me-associar')}
-              className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-bold px-8 py-4 transition-colors text-base tracking-wide shadow-card"
+              className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-graphite-900 font-bold px-8 py-4 transition-colors text-base tracking-wide shadow-card"
             >
               {content.cta_primary_label}
               <ArrowRight size={16} />

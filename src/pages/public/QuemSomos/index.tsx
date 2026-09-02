@@ -155,7 +155,7 @@ export default function QuemSomosPage() {
           <h2 className="text-3xl md:text-4xl heading-editorial text-white mt-4">{ctaTitle}</h2>
           <p className="text-graphite-300 mt-4">{ctaDescription}</p>
           <div className="flex gap-4 justify-center mt-8">
-            <Link to="/quero-me-associar" className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 font-bold transition-colors">Quero me associar</Link>
+            <Link to="/quero-me-associar" className="bg-primary-500 hover:bg-primary-600 text-graphite-900 px-6 py-3 font-bold transition-colors">Quero me associar</Link>
             <Link to="/contato" className="border-2 border-white/30 text-white px-6 py-3 font-bold hover:border-primary-400 hover:text-primary-400 transition-colors">Falar com a equipe</Link>
           </div>
         </div>

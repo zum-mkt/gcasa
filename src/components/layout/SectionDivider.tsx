@@ -6,7 +6,7 @@
 export function SectionDivider({ from = 'dark' }: { from?: 'dark' | 'light' }) {
   const gradient =
     from === 'dark'
-      ? 'linear-gradient(to bottom, #3D3B3B, transparent)'
-      : 'linear-gradient(to bottom, transparent, #3D3B3B)'
+      ? 'linear-gradient(to bottom, #0D2228, transparent)'
+      : 'linear-gradient(to bottom, transparent, #0D2228)'
   return <div aria-hidden="true" className="h-10 lg:h-14 w-full" style={{ background: gradient }} />
 }

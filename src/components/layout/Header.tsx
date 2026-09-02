@@ -135,7 +135,7 @@ export function Header() {
                   href={item.url}
                   target={item.open_new_tab ? '_blank' : undefined}
                   rel={item.open_new_tab ? 'noreferrer' : undefined}
-                  className="px-2 py-2 text-[0.8rem] font-bold transition-colors text-graphite-700 hover:text-primary-600 whitespace-nowrap flex-shrink-0"
+                  className="px-2.5 py-2 text-[0.82rem] font-medium transition-colors text-graphite-800 hover:text-primary-600 whitespace-nowrap flex-shrink-0"
                 >
                   {item.label}
                 </a>
@@ -145,7 +145,7 @@ export function Header() {
                   onClick={() => handleItemClick(item)}
                   onMouseEnter={() => prefetchItem(item)}
                   onFocus={() => prefetchItem(item)}
-                  className="px-2 py-2 text-[0.8rem] font-bold transition-colors text-graphite-700 hover:text-primary-600 whitespace-nowrap flex-shrink-0"
+                  className="px-2.5 py-2 text-[0.82rem] font-medium transition-colors text-graphite-800 hover:text-primary-600 whitespace-nowrap flex-shrink-0"
                 >
                   {item.label}
                 </button>
@@ -201,7 +201,7 @@ export function Header() {
                 href={item.url}
                 target={item.open_new_tab ? '_blank' : undefined}
                 rel={item.open_new_tab ? 'noreferrer' : undefined}
-                className="w-full text-left block py-2.5 text-base font-bold transition-colors text-graphite-800"
+                className="w-full text-left block py-2.5 text-base font-medium transition-colors text-graphite-800"
               >
                 {item.label}
               </a>
@@ -210,7 +210,7 @@ export function Header() {
                 key={item.id}
                 onClick={() => handleItemClick(item)}
                 onTouchStart={() => prefetchItem(item)}
-                className="w-full text-left block py-2.5 text-base font-bold transition-colors text-graphite-800"
+                className="w-full text-left block py-2.5 text-base font-medium transition-colors text-graphite-800"
               >
                 {item.label}
               </button>
