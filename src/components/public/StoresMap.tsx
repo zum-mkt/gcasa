@@ -45,6 +45,8 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
   const layersRef = useRef<{ map: import('leaflet').TileLayer; sat: import('leaflet').TileLayer } | null>(null)
   const [mode, setMode] = useState<'map' | 'sat'>('map')
   const [fullscreen, setFullscreen] = useState(false)
+  const fullscreenRef = useRef(false)
+  fullscreenRef.current = fullscreen
   const associatesRef = useRef(associates)
   associatesRef.current = associates
   const associateKey = useMemo(
@@ -71,7 +73,7 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
 
       const map = L.map(containerRef.current, {
         zoomControl: false,
-        scrollWheelZoom: true,
+        scrollWheelZoom: false,
         attributionControl: true,
         layers: [mapLayer],
       })
@@ -114,6 +116,13 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
         map.setView([-22.1, -49.5], 7)
       }
 
+      map.on('mousedown', () => {
+        map.scrollWheelZoom.enable()
+      })
+      map.getContainer().addEventListener('mouseleave', () => {
+        if (!fullscreenRef.current) map.scrollWheelZoom.disable()
+      })
+
       mapRef.current = map
       layersRef.current = { map: mapLayer, sat: satLayer }
       requestAnimationFrame(() => map.invalidateSize())
@@ -148,11 +157,21 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
     }
     window.addEventListener('keydown', onKey)
     const t = window.setTimeout(() => mapRef.current?.invalidateSize(), 80)
+    if (fullscreen) mapRef.current?.scrollWheelZoom.enable()
+    else mapRef.current?.scrollWheelZoom.disable()
     return () => {
       window.removeEventListener('keydown', onKey)
       window.clearTimeout(t)
     }
   }, [fullscreen])
+
+  const unlockZoom = () => {
+    mapRef.current?.scrollWheelZoom.enable()
+  }
+
+  const lockZoom = () => {
+    if (!fullscreen) mapRef.current?.scrollWheelZoom.disable()
+  }
 
   return (
     <div
@@ -161,6 +180,8 @@ export function StoresMap({ associates = [], className }: StoresMapProps) {
         fullscreen ? 'fixed inset-0 z-[80] h-screen' : 'h-[380px] md:h-[460px] lg:h-[500px]',
         className,
       )}
+      onMouseDown={unlockZoom}
+      onMouseLeave={lockZoom}
     >
       <div ref={containerRef} className="absolute inset-0" />
 
