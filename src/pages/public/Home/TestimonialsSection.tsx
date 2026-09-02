@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
-import { getInitials } from '@/lib/utils'
+import { getInitials, shuffle } from '@/lib/utils'
 import type { Testimonial } from '@/types/models'
+import { revealViewport, slideLeft } from '@/hooks/useScrollAnimation'
+
+const AUTO_ADVANCE_MS = 6000
 
 async function fetchTestimonials(): Promise<Testimonial[]> {
   const { data } = await supabase
@@ -35,47 +38,59 @@ const defaultTestimonials: Testimonial[] = [
 
 export function TestimonialsSection() {
   const { data: fetched = [] } = useQuery({ queryKey: ['testimonials-home'], queryFn: fetchTestimonials })
-  const testimonials = fetched.length > 0 ? fetched : defaultTestimonials
+  // Embaralhado no render (não na query) para não "congelar" uma ordem sorteada
+  // dentro do cache persistido em localStorage — mesmo padrão usado em AssociatesSection.
+  const testimonials = useMemo(() => shuffle(fetched.length > 0 ? fetched : defaultTestimonials), [fetched])
   const [current, setCurrent] = useState(0)
 
   const prev = () => setCurrent((c) => (c === 0 ? testimonials.length - 1 : c - 1))
   const next = () => setCurrent((c) => (c === testimonials.length - 1 ? 0 : c + 1))
 
+  // Alterna sozinho a cada AUTO_ADVANCE_MS; o efeito reinicia sempre que `current`
+  // muda (seja pelo próprio timer ou por um clique manual nas setas), então um
+  // clique manual não é seguido por um avanço automático precoce.
+  useEffect(() => {
+    if (testimonials.length <= 1) return
+    const id = setInterval(next, AUTO_ADVANCE_MS)
+    return () => clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current, testimonials.length])
+
   const t = testimonials[current]
 
   return (
-    <section className="bg-navy-900 text-white py-24 overflow-hidden">
+    <section className="texture-concrete texture-concrete--dark bg-graphite-900 text-white py-16 lg:py-20 overflow-hidden">
       <div className="container-site">
-        <div className="grid lg:grid-cols-[320px_1fr] gap-16 items-center">
+        <div className="grid lg:grid-cols-[320px_1fr] gap-12 lg:gap-16 items-center">
 
           {/* Left */}
-          <div>
-            <span className="section-label-light mb-5 block">DEPOIMENTOS</span>
+          <motion.div initial="hidden" whileInView="show" viewport={revealViewport} variants={slideLeft}>
+            <span className="section-label-light mb-4 block">DEPOIMENTOS</span>
             <h2 className="text-3xl lg:text-4xl heading-editorial text-white text-balance">
               O que os associados dizem sobre o grupo
             </h2>
             {/* Orange divider */}
-            <div className="w-12 h-[2px] bg-primary-500 mt-8 mb-8" />
+            <div className="w-12 h-1 bg-primary-500 mt-7 mb-7" />
             <div className="flex items-center gap-4">
               <button
                 onClick={prev}
-                className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="w-11 h-11 border-2 border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
                 aria-label="Anterior"
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft size={18} />
               </button>
-              <span className="text-sm text-white/30 tabular-nums">
+              <span className="text-sm text-white/60 font-bold tabular-nums">
                 {String(current + 1).padStart(2, '0')} / {String(testimonials.length).padStart(2, '0')}
               </span>
               <button
                 onClick={next}
-                className="w-10 h-10 bg-primary-500 hover:bg-primary-600 flex items-center justify-center transition-colors"
+                className="w-11 h-11 bg-primary-500 hover:bg-primary-600 flex items-center justify-center transition-colors"
                 aria-label="Próximo"
               >
-                <ChevronRight size={16} />
+                <ChevronRight size={18} />
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right — quote */}
           <AnimatePresence mode="wait">
@@ -88,24 +103,24 @@ export function TestimonialsSection() {
               className="relative"
             >
               {/* Large decorative quote mark */}
-              <span className="absolute -top-8 -left-2 text-[7rem] leading-none text-primary-500/20 font-serif select-none pointer-events-none">"</span>
+              <span className="absolute -top-8 -left-2 text-[7rem] leading-none text-primary-500/30 font-serif select-none pointer-events-none">"</span>
 
-              <p className="text-xl lg:text-2xl heading-editorial text-white/85 leading-relaxed font-light relative z-10">
+              <p className="text-xl lg:text-2xl heading-editorial text-white leading-relaxed relative z-10">
                 {t.text}
               </p>
 
-              <div className="flex items-center gap-4 mt-8 pt-8 border-t border-white/10">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-navy-700 flex items-center justify-center flex-shrink-0">
+              <div className="flex items-center gap-4 mt-8 pt-8 border-t border-white/20">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-graphite-700 flex items-center justify-center flex-shrink-0">
                   {t.avatar_url ? (
                     <img src={t.avatar_url} alt={t.author_name} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-white font-light text-sm">{getInitials(t.author_name)}</span>
+                    <span className="text-white font-bold text-sm">{getInitials(t.author_name)}</span>
                   )}
                 </div>
                 <div>
-                  <p className="font-semibold text-white text-sm">{t.author_name}</p>
+                  <p className="font-bold text-white text-base">{t.author_name}</p>
                   {(t.author_role || t.company) && (
-                    <p className="text-xs text-white/35 mt-0.5 font-light">
+                    <p className="text-sm text-white/60 mt-0.5 font-medium">
                       {[t.author_role, t.company].filter(Boolean).join(' · ')}
                     </p>
                   )}

@@ -1,8 +1,8 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Home, Users, Truck, Calendar, FileText,
-  MessageSquare, Award, Image, Inbox, UserCog, Settings,
-  ChevronLeft, ChevronRight, Building2, Megaphone,
+  MessageSquare, Award, Inbox, UserCog, Settings, Newspaper,
+  ChevronLeft, ChevronRight, Building2, Megaphone, Menu as MenuIcon, BookOpen,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useUiStore } from '@/stores/uiStore'
@@ -11,6 +11,8 @@ import { useAuth } from '@/hooks/useAuth'
 const navItems = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Home', href: '/admin/home', icon: Home },
+  { label: 'Páginas', href: '/admin/paginas', icon: BookOpen },
+  { label: 'Menu', href: '/admin/menu', icon: MenuIcon },
   { label: 'Banners', href: '/admin/banners', icon: Megaphone },
   { label: 'Associados', href: '/admin/associados', icon: Building2 },
   { label: 'Fornecedores', href: '/admin/fornecedores', icon: Truck },
@@ -18,8 +20,8 @@ const navItems = [
   { label: 'Blog', href: '/admin/blog', icon: FileText },
   { label: 'Depoimentos', href: '/admin/depoimentos', icon: MessageSquare },
   { label: 'Parceiros', href: '/admin/parceiros', icon: Award },
-  { label: 'Galeria', href: '/admin/galeria', icon: Image },
   { label: 'Formulários', href: '/admin/formularios', icon: Inbox },
+  { label: 'Tabloides', href: '/admin/tabloides', icon: Newspaper },
 ]
 
 const adminItems = [

@@ -21,16 +21,24 @@ const forgotSchema = z.object({
 type ForgotForm = z.infer<typeof forgotSchema>
 
 export default function AdminLogin() {
-  const { signIn, resetPassword, isAuthenticated } = useAuth()
+  const { signIn, resetPassword, isAuthenticated, profile } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const from = (location.state as { from?: Location })?.from?.pathname ?? '/admin/dashboard'
+  const isPortal = location.pathname.startsWith('/portal')
+  // Sem state.from (ex: usuário digitou /admin ou /portal direto), o destino
+  // padrão depende do papel — associado cai no portal, admin/editor no painel.
+  const defaultHome = profile?.role === 'associate' ? '/portal/produtos' : '/admin/dashboard'
+  const from = (location.state as { from?: Location })?.from?.pathname ?? defaultHome
 
   const [showPassword, setShowPassword] = useState(false)
   const [mode, setMode] = useState<'login' | 'forgot' | 'forgot-sent'>('login')
   const [error, setError] = useState<string | null>(null)
 
-  if (isAuthenticated) {
+  // Só redireciona depois que o `profile` carrega — `isAuthenticated` fica true
+  // assim que a sessão é gravada, mas o role (admin/editor/associate) só chega
+  // um instante depois via fetch separado. Redirecionar cedo demais manda todo
+  // mundo pro destino padrão de admin/editor, mesmo quem é associado.
+  if (isAuthenticated && profile) {
     navigate(from, { replace: true })
   }
 
@@ -50,7 +58,9 @@ export default function AdminLogin() {
     setError(null)
     try {
       await signIn(data.email, data.password)
-      navigate(from, { replace: true })
+      // Não navega aqui — o profile (e portanto o destino certo) ainda não
+      // carregou nesse instante. O redirecionamento acima cuida disso assim
+      // que `profile` chegar.
     } catch {
       setError('E-mail ou senha incorretos. Verifique seus dados e tente novamente.')
     }
@@ -114,14 +124,18 @@ export default function AdminLogin() {
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">G</span>
             </div>
-            <span className="text-white font-bold">GCasa Admin</span>
+            <span className="text-white font-bold">{isPortal ? 'Portal do Associado' : 'GCasa Admin'}</span>
           </div>
 
           {mode === 'login' && (
             <>
               <div className="mb-8">
-                <h1 className="text-2xl font-bold text-white">Bem-vindo de volta</h1>
-                <p className="mt-1 text-white/50 text-sm">Entre com suas credenciais para acessar o painel.</p>
+                <h1 className="text-2xl font-bold text-white">{isPortal ? 'Portal da loja' : 'Bem-vindo de volta'}</h1>
+                <p className="mt-1 text-white/50 text-sm">
+                  {isPortal
+                    ? 'Entre com o login da sua loja pra preencher o tabloide.'
+                    : 'Entre com suas credenciais para acessar o painel.'}
+                </p>
               </div>
 
               {error && (

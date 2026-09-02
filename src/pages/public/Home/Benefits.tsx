@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { revealViewport, slideLeft, imageReveal, staggerContainer, staggerItem } from '@/hooks/useScrollAnimation'
 
 const defaultItems = [
   { title: 'Inteligência de Mercado', description: 'Acesso a dados, indicadores e análises exclusivas do setor de materiais de construção.' },
@@ -34,7 +35,13 @@ export function Benefits() {
       <div className="grid lg:grid-cols-2 min-h-[560px]">
 
         {/* Left — photo */}
-        <div className="relative bg-graphite-50 min-h-[360px] lg:min-h-0">
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={revealViewport}
+          variants={imageReveal}
+          className="relative bg-graphite-50 min-h-[360px] lg:min-h-0"
+        >
           {imageUrl ? (
             <img src={imageUrl} alt="Benefícios" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
           ) : (
@@ -44,41 +51,46 @@ export function Benefits() {
           )}
           {/* Orange accent top-right */}
           <div className="absolute top-0 right-0 w-1 h-24 bg-primary-500" />
-        </div>
+        </motion.div>
 
         {/* Right — editorial list */}
-        <div className="flex flex-col justify-center px-10 py-16 lg:px-16 bg-offwhite">
-          <span className="section-label mb-5">{tag}</span>
-          <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance mb-10">
-            {title}
-          </h2>
+        <div className="flex flex-col justify-center px-8 py-12 lg:px-16 bg-offwhite">
+          <motion.div initial="hidden" whileInView="show" viewport={revealViewport} variants={slideLeft}>
+            <span className="section-label mb-4 block">{tag}</span>
+            <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance mb-8">
+              {title}
+            </h2>
+          </motion.div>
 
-          <ul className="space-y-0">
+          <motion.ul
+            initial="hidden"
+            whileInView="show"
+            viewport={revealViewport}
+            variants={staggerContainer(0.08)}
+            className="space-y-0"
+          >
             {items.map((b, i) => (
               <motion.li
                 key={b.title}
-                initial={{ opacity: 0, x: 16 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.07 }}
-                className="flex gap-5 py-5 border-b border-graphite-100 last:border-0"
+                variants={staggerItem}
+                className="flex gap-5 py-4 border-b border-graphite-200 last:border-0"
               >
-                <span className="text-[0.65rem] text-primary-500 font-bold tracking-widest mt-1 w-5 flex-shrink-0 tabular-nums">
+                <span className="text-sm text-primary-500 font-extrabold tracking-widest mt-0.5 w-6 flex-shrink-0 tabular-nums">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <div>
-                  <p className="text-sm font-semibold text-graphite-900 mb-0.5">{b.title}</p>
-                  <p className="text-sm text-graphite-500 leading-relaxed font-light">{b.description}</p>
+                  <p className="text-base font-bold text-graphite-900 mb-1">{b.title}</p>
+                  <p className="text-sm text-graphite-700 leading-relaxed">{b.description}</p>
                 </div>
               </motion.li>
             ))}
-          </ul>
+          </motion.ul>
 
           <Link
             to="/quero-me-associar"
-            className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors self-start"
+            className="inline-flex items-center gap-2 mt-8 text-base font-bold text-primary-600 hover:text-primary-700 transition-colors self-start"
           >
-            Quero me associar <ArrowRight size={14} />
+            Quero me associar <ArrowRight size={16} />
           </Link>
         </div>
       </div>

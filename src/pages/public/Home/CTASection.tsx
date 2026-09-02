@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { BrandBlocks } from '@/components/layout/BrandBlocks'
+import { revealViewport, slideLeft } from '@/hooks/useScrollAnimation'
 
 type CtaContent = {
   title?: string; description?: string
@@ -26,25 +28,26 @@ export function CTASection() {
   const secondaryHref = cta.cta_secondary_href ?? '/contato'
 
   return (
-    <section className="bg-navy-950 py-0 overflow-hidden">
+    <section id="contato" className="texture-concrete texture-concrete--dark bg-graphite-900 py-0 overflow-hidden scroll-mt-20 relative">
+      <BrandBlocks className="absolute bottom-6 left-6 lg:left-10 hidden sm:block" />
       <div className="grid lg:grid-cols-2 min-h-[380px]">
         {/* Left — text block */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col justify-center px-10 py-16 lg:px-16 lg:py-20 relative"
+          initial="hidden"
+          whileInView="show"
+          viewport={revealViewport}
+          variants={slideLeft}
+          className="flex flex-col justify-center px-10 py-14 lg:px-16 lg:py-16 relative"
         >
           {/* Orange top border */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary-500 lg:hidden" />
-          <div className="absolute top-0 left-0 bottom-0 w-[2px] bg-primary-500 hidden lg:block" />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-primary-500 lg:hidden" />
+          <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary-500 hidden lg:block" />
 
-          <span className="section-label-light mb-6">FAÇA PARTE</span>
+          <span className="section-label mb-5">FAÇA PARTE</span>
           <h2 className="text-3xl lg:text-4xl heading-editorial text-white text-balance leading-tight">
             {title}
           </h2>
-          <p className="mt-5 text-sm text-white/45 leading-relaxed max-w-sm font-light">
+          <p className="mt-5 text-lg text-graphite-300 leading-relaxed max-w-sm">
             {description}
           </p>
         </motion.div>
@@ -55,21 +58,21 @@ export function CTASection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex flex-col justify-center items-start px-10 py-16 lg:px-16 lg:py-20 bg-navy-900 gap-4"
+          className="flex flex-col justify-center items-start px-10 py-14 lg:px-16 lg:py-16 gap-4"
         >
           <Link
             to={primaryHref}
-            className="inline-flex items-center gap-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold px-8 py-4 transition-colors text-sm tracking-wide w-full max-w-xs justify-between"
+            className="inline-flex items-center gap-3 bg-primary-500 hover:bg-primary-600 text-white font-bold px-8 py-4 transition-colors text-base tracking-wide w-full max-w-xs justify-between shadow-card"
           >
             {primaryLabel}
-            <ArrowRight size={16} />
+            <ArrowRight size={18} />
           </Link>
           <Link
             to={secondaryHref}
-            className="inline-flex items-center gap-3 text-white/60 hover:text-white font-light px-8 py-4 border border-white/15 hover:border-white/30 transition-colors text-sm w-full max-w-xs justify-between"
+            className="inline-flex items-center gap-3 text-white hover:text-primary-400 font-bold px-8 py-4 border-2 border-white/30 hover:border-primary-400 transition-colors text-base w-full max-w-xs justify-between"
           >
             {secondaryLabel}
-            <ArrowRight size={16} />
+            <ArrowRight size={18} />
           </Link>
         </motion.div>
       </div>

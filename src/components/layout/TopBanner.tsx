@@ -51,25 +51,30 @@ export function TopBanner() {
 
   return (
     <div className="relative w-full overflow-hidden">
-      <AnimatePresence mode="wait">
+      {/* ghost element maintains container height during slide transition */}
+      <div className="invisible w-full" aria-hidden="true">
+        {banner.image_url ? (
+          <img src={banner.image_url} alt="" className="w-full block" />
+        ) : (
+          <div className="w-full" style={{ height: 80 }} />
+        )}
+      </div>
+
+      <AnimatePresence initial={false}>
         <motion.div
           key={banner.id}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-          className="w-full"
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '-100%' }}
+          transition={{ duration: 0.45, ease: 'easeInOut' }}
+          className="absolute inset-0 w-full"
         >
           {banner.image_url ? (
-            <img
-              src={banner.image_url}
-              alt=""
-              className="w-full block"
-            />
+            <img src={banner.image_url} alt="" className="w-full block" />
           ) : (
             <div
-              className="w-full"
-              style={{ height: 80, background: banner.bg_color ?? '#E8630A' }}
+              className="w-full h-full"
+              style={{ background: banner.bg_color ?? '#FAB136' }}
             />
           )}
         </motion.div>
@@ -78,18 +83,17 @@ export function TopBanner() {
       {/* clickable overlay if link exists */}
       {banner.link_href && (
         isExternal ? (
-          <a href={banner.link_href} target="_blank" rel="noreferrer" className="absolute inset-0" aria-label="Ver mais" />
+          <a href={banner.link_href} target="_blank" rel="noreferrer" className="absolute inset-0 z-10" aria-label="Ver mais" />
         ) : (
-          <Link to={banner.link_href} className="absolute inset-0" aria-label="Ver mais" />
+          <Link to={banner.link_href} className="absolute inset-0 z-10" aria-label="Ver mais" />
         )
       )}
 
       {banners.length > 1 && (
-        <span className="absolute bottom-2 right-10 text-[10px] text-white/60 tabular-nums bg-black/30 px-1.5 py-0.5 rounded">
+        <span className="absolute bottom-2 right-10 z-10 text-[10px] text-white/60 tabular-nums bg-black/30 px-1.5 py-0.5 rounded">
           {index + 1}/{banners.length}
         </span>
       )}
-
     </div>
   )
 }

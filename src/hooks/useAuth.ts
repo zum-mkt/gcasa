@@ -28,6 +28,14 @@ export function useAuth() {
         if (session?.user) {
           setSession(session)
           setUser(session.user)
+          // O `persist` do authStore grava { session, profile } no localStorage
+          // do NAVEGADOR, não por usuário — se esse aparelho já teve sessão de
+          // outra pessoa (ex.: admin testando), o profile antigo fica em cache
+          // até o fetch abaixo terminar. Limpa na hora se o id não bate, senão
+          // por uma fração de segundo `profile` fica com o papel de outra
+          // pessoa (e telas que decidem algo nesse instante, como o redirect
+          // do login, podem escolher o destino errado).
+          if (useAuthStore.getState().profile?.id !== session.user.id) setProfile(null)
           const p = await fetchProfile(session.user.id)
           if (mounted) setProfile(p)
         } else {
@@ -52,6 +60,7 @@ export function useAuth() {
         if (session?.user) {
           setSession(session)
           setUser(session.user)
+          if (useAuthStore.getState().profile?.id !== session.user.id) setProfile(null)
           const p = await fetchProfile(session.user.id)
           if (mounted) setProfile(p)
         } else {
@@ -96,19 +105,30 @@ export function useAuth() {
     if (error) throw error
   }
 
-  const isAdmin = profile?.role === 'admin'
-  const isEditor = profile?.role === 'editor' || isAdmin
+  // Trava final: nunca expõe um `profile` que não seja do `user` atual. Cobre
+  // a janela entre o `user` novo já estar setado e o fetch do profile novo
+  // ainda não ter voltado (ver comentário no useEffect acima) — sem isso,
+  // qualquer leitor de `profile`/`isAdmin`/`isEditor`/`isAssociate` correria o
+  // risco de ver o papel de outra pessoa por uma fração de segundo.
+  const safeProfile = profile && user && profile.id === user.id ? profile : null
+
+  const isAdmin = safeProfile?.role === 'admin'
+  const isEditor = safeProfile?.role === 'editor' || isAdmin
+  const isAssociate = safeProfile?.role === 'associate'
+  const associateId = safeProfile?.associate_id ?? null
   const isAuthenticated = !!session && !!user
 
   return {
     user,
     session,
-    profile,
+    profile: safeProfile,
     isLoading,
     isInitialized,
     isAuthenticated,
     isAdmin,
     isEditor,
+    isAssociate,
+    associateId,
     signIn,
     signOut,
     resetPassword,

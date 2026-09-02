@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { BrandBlocks } from '@/components/layout/BrandBlocks'
 
 const SvgInstagram = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
@@ -36,7 +37,7 @@ const navigation = {
     { label: 'Como se associar', href: '/quero-me-associar' },
     { label: 'Empresas associadas', href: '/associados' },
     { label: 'Eventos exclusivos', href: '/eventos' },
-    { label: 'Capacitações', href: '/eventos?tipo=capacitacao' },
+    { label: 'Capacitações', href: '/eventos' },
   ],
 }
 
@@ -76,8 +77,10 @@ export function Footer() {
   ].filter(s => s.href)
 
   return (
-    <footer className="bg-dark-900 text-white">
-      <div className="container-site py-16">
+    <footer className="relative bg-graphite-900 text-graphite-300 border-t border-graphite-800 overflow-hidden">
+      <BrandBlocks className="absolute bottom-4 left-6 lg:left-10 hidden sm:block opacity-90" />
+
+      <div className="container-site py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
           {/* Brand */}
           <div className="lg:col-span-2">
@@ -86,22 +89,22 @@ export function Footer() {
                 <img src={logoUrl} alt={companyName} className="h-16 w-auto object-contain" />
               ) : (
                 <>
-                  <div className="w-9 h-9 bg-primary-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-bold">{companyName[0]}</span>
+                  <div className="w-9 h-9 bg-primary-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-graphite-900 font-bold">{companyName[0]}</span>
                   </div>
-                  <p className="text-sm font-bold text-white leading-tight">{companyName}</p>
+                  <p className="text-base font-bold text-white leading-tight">{companyName}</p>
                 </>
               )}
             </Link>
-            <p className="text-sm text-white/50 leading-relaxed max-w-xs">
+            <p className="text-base text-graphite-300 leading-relaxed max-w-xs">
               {site.tagline ?? 'Conectamos empresas, fortalecemos negócios e construímos juntos o futuro do setor.'}
             </p>
 
             {socialLinks.length > 0 && (
-              <div className="flex items-center gap-3 mt-6">
+              <div className="flex items-center gap-2 mt-6">
                 {socialLinks.map(({ icon: Icon, href, label }) => (
                   <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                    className="w-8 h-8 bg-white/10 hover:bg-primary-600 rounded-lg flex items-center justify-center transition-colors">
+                    className="w-9 h-9 border-2 border-graphite-700 text-graphite-300 hover:border-primary-500 hover:text-primary-400 flex items-center justify-center transition-colors">
                     <Icon />
                   </a>
                 ))}
@@ -111,33 +114,33 @@ export function Footer() {
 
           {/* Nav columns */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Navegação</p>
-            <ul className="space-y-2">
+            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Navegação</p>
+            <ul className="space-y-2.5">
               {navigation.grupo.map((item) => (
                 <li key={item.href}>
-                  <Link to={item.href} className="text-sm text-white/50 hover:text-white transition-colors">{item.label}</Link>
+                  <Link to={item.href} className="text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">{item.label}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Institucional</p>
-            <ul className="space-y-2">
+            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Institucional</p>
+            <ul className="space-y-2.5">
               {navigation.institucional.map((item) => (
                 <li key={item.href}>
-                  <Link to={item.href} className="text-sm text-white/50 hover:text-white transition-colors">{item.label}</Link>
+                  <Link to={item.href} className="text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">{item.label}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Associados</p>
-            <ul className="space-y-2">
+            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Associados</p>
+            <ul className="space-y-2.5">
               {navigation.associados.map((item) => (
                 <li key={item.href}>
-                  <Link to={item.href} className="text-sm text-white/50 hover:text-white transition-colors">{item.label}</Link>
+                  <Link to={item.href} className="text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">{item.label}</Link>
                 </li>
               ))}
             </ul>
@@ -145,26 +148,26 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">Fale Conosco</p>
+            <p className="text-xs font-extrabold uppercase tracking-wide text-graphite-500 mb-4">Fale Conosco</p>
             <ul className="space-y-3">
               {phone && (
                 <li>
-                  <a href={`tel:${phone.replace(/\D/g, '')}`} className="flex items-start gap-2 text-sm text-white/50 hover:text-white transition-colors">
-                    <Phone size={13} className="mt-0.5 flex-shrink-0" />{phone}
+                  <a href={`tel:${phone.replace(/\D/g, '')}`} className="flex items-start gap-2 text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">
+                    <Phone size={15} className="mt-0.5 flex-shrink-0" />{phone}
                   </a>
                 </li>
               )}
               {email && (
                 <li>
-                  <a href={`mailto:${email}`} className="flex items-start gap-2 text-sm text-white/50 hover:text-white transition-colors">
-                    <Mail size={13} className="mt-0.5 flex-shrink-0" />{email}
+                  <a href={`mailto:${email}`} className="flex items-start gap-2 text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">
+                    <Mail size={15} className="mt-0.5 flex-shrink-0" />{email}
                   </a>
                 </li>
               )}
               {address && (
                 <li>
-                  <address className="not-italic flex items-start gap-2 text-sm text-white/50">
-                    <MapPin size={13} className="mt-0.5 flex-shrink-0" />
+                  <address className="not-italic flex items-start gap-2 text-base font-medium text-graphite-300">
+                    <MapPin size={15} className="mt-0.5 flex-shrink-0" />
                     <span>
                       {address}<br />
                       {[addressCity, addressState].filter(Boolean).join(', ')}
@@ -178,12 +181,12 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="border-t border-graphite-800">
         <div className="container-site py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/30">© {new Date().getFullYear()} {companyName}. Todos os direitos reservados.</p>
+          <p className="text-sm font-medium text-graphite-500">© {new Date().getFullYear()} {companyName}. Todos os direitos reservados.</p>
           <div className="flex items-center gap-4">
-            <Link to="/politica-de-privacidade" className="text-xs text-white/30 hover:text-white/60 transition-colors">Política de Privacidade</Link>
-            <Link to="/termos-de-uso" className="text-xs text-white/30 hover:text-white/60 transition-colors">Termos de Uso</Link>
+            <Link to="/politica-de-privacidade" className="text-sm font-medium text-graphite-500 hover:text-white transition-colors">Política de Privacidade</Link>
+            <Link to="/termos-de-uso" className="text-sm font-medium text-graphite-500 hover:text-white transition-colors">Termos de Uso</Link>
           </div>
         </div>
       </div>

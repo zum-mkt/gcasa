@@ -24,15 +24,15 @@ export default function BlogPage() {
   const [featured, ...rest] = filtered
 
   return (
-    <div className="pt-16 min-h-screen bg-gray-50">
-      <div className="bg-dark-900 py-20">
+    <div className="pt-16 min-h-screen bg-offwhite">
+      <div className="texture-concrete texture-concrete--dark bg-graphite-900 py-20">
         <div className="container-site text-center">
-          <span className="section-label text-red-400">Blog & Conteúdo</span>
-          <h1 className="text-4xl md:text-5xl font-display font-light text-white mt-4">Insights do setor de<br /><span className="text-primary-600">construção e varejo</span></h1>
+          <span className="section-label-light">Blog & Conteúdo</span>
+          <h1 className="text-4xl md:text-5xl heading-editorial text-white mt-4">Insights do setor de<br /><span className="text-primary-500">construção e varejo</span></h1>
           <div className="mt-8 relative max-w-md mx-auto">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-graphite-400" />
             <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar artigos..."
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-primary-600 transition-colors text-sm" />
+              className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 text-white placeholder-graphite-400 focus:outline-none focus:border-primary-500 transition-colors text-sm" />
           </div>
         </div>
       </div>
@@ -40,24 +40,24 @@ export default function BlogPage() {
       <div className="container-site py-16">
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => <div key={i} className="bg-white rounded-2xl h-72 animate-pulse" />)}
+            {Array.from({ length: 6 }).map((_, i) => <div key={i} className="bg-white h-72 animate-pulse" />)}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">Nenhum artigo encontrado.</div>
+          <div className="text-center py-20 text-graphite-400">Nenhum artigo encontrado.</div>
         ) : (
           <div className="space-y-6">
             {featured && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                <Link to={`/blog/${featured.slug}`} className="group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-dropdown transition-all duration-300">
+                <Link to={`/blog/${featured.slug}`} className="group block bg-white overflow-hidden shadow-card hover:shadow-dropdown transition-all duration-300">
                   <div className="grid md:grid-cols-2">
-                    <div className="aspect-video md:aspect-auto bg-gray-100 overflow-hidden">
-                      {featured.cover_url ? <img src={featured.cover_url} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /> : <div className="w-full h-full bg-gradient-to-br from-primary-600 to-dark-900" />}
+                    <div className="aspect-video md:aspect-auto bg-graphite-100 overflow-hidden">
+                      {featured.cover_url ? <img src={featured.cover_url} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /> : <div className="w-full h-full bg-gradient-to-br from-primary-500 to-graphite-900" />}
                     </div>
                     <div className="p-8 flex flex-col justify-center">
-                      {featured.category?.name && <span className="text-xs font-bold uppercase tracking-widest text-primary-600 mb-3">{featured.category.name}</span>}
-                      <h2 className="text-2xl font-semibold text-gray-900 group-hover:text-primary-600 transition-colors mb-3">{featured.title}</h2>
-                      <p className="text-gray-500 text-sm line-clamp-3">{featured.excerpt}</p>
-                      <div className="flex items-center gap-4 mt-6 text-xs text-gray-400">
+                      {featured.category?.name && <span className="text-xs font-bold uppercase tracking-widest text-primary-500 mb-3">{featured.category.name}</span>}
+                      <h2 className="text-2xl heading-editorial text-graphite-900 group-hover:text-primary-600 transition-colors mb-3">{featured.title}</h2>
+                      <p className="text-graphite-600 text-sm line-clamp-3">{featured.excerpt}</p>
+                      <div className="flex items-center gap-4 mt-6 text-xs text-graphite-500">
                         {featured.published_at && <span>{formatDateShort(featured.published_at)}</span>}
                         {featured.read_time && <span className="flex items-center gap-1"><Clock size={11} />{featured.read_time} min de leitura</span>}
                       </div>
@@ -69,15 +69,15 @@ export default function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {rest.map((post, i) => (
                 <motion.div key={post.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                  <Link to={`/blog/${post.slug}`} className="group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-dropdown transition-all duration-300 hover:-translate-y-1 h-full">
-                    <div className="aspect-video bg-gray-100 overflow-hidden">
-                      {post.cover_url ? <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /> : <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-300 font-bold text-2xl">{post.title[0]}</div>}
+                  <Link to={`/blog/${post.slug}`} className="group block bg-white overflow-hidden shadow-card hover:shadow-dropdown transition-all duration-300 hover:-translate-y-1 h-full">
+                    <div className="aspect-video bg-graphite-100 overflow-hidden">
+                      {post.cover_url ? <img src={post.cover_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /> : <div className="w-full h-full bg-gradient-to-br from-graphite-100 to-graphite-200 flex items-center justify-center text-graphite-300 font-bold text-2xl">{post.title[0]}</div>}
                     </div>
                     <div className="p-5">
-                      {post.category?.name && <span className="text-xs font-bold uppercase tracking-widest text-primary-600 mb-2 block">{post.category.name}</span>}
-                      <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-2">{post.title}</h3>
-                      <p className="text-gray-500 text-sm mt-2 line-clamp-2">{post.excerpt}</p>
-                      <div className="flex items-center gap-3 mt-4 text-xs text-gray-400">
+                      {post.category?.name && <span className="text-xs font-bold uppercase tracking-widest text-primary-500 mb-2 block">{post.category.name}</span>}
+                      <h3 className="font-bold text-graphite-900 group-hover:text-primary-600 transition-colors line-clamp-2">{post.title}</h3>
+                      <p className="text-graphite-600 text-sm mt-2 line-clamp-2">{post.excerpt}</p>
+                      <div className="flex items-center gap-3 mt-4 text-xs text-graphite-500">
                         {post.published_at && <span>{formatDateShort(post.published_at)}</span>}
                         {post.read_time && <span className="flex items-center gap-1"><Clock size={11} />{post.read_time} min</span>}
                       </div>

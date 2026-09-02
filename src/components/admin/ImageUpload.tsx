@@ -12,6 +12,9 @@ interface ImageUploadProps {
   label?: string
   hint?: string
   accept?: string
+  fit?: 'cover' | 'contain'
+  /** Fundo do preview: xadrez mostra PNG transparente (logo sem fundo). */
+  previewBg?: 'white' | 'checker'
 }
 
 export function ImageUpload({
@@ -22,6 +25,8 @@ export function ImageUpload({
   label,
   hint,
   accept = 'image/*',
+  fit = 'cover',
+  previewBg = 'white',
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
@@ -75,7 +80,17 @@ export function ImageUpload({
 
       {value ? (
         <div className="relative rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-          <img src={value} alt="Preview" className="w-full h-40 object-cover" />
+          <img
+            src={value}
+            alt="Preview"
+            className={cn(
+              'w-full h-40',
+              fit === 'contain' ? 'object-contain' : 'object-cover',
+              previewBg === 'checker'
+                ? 'bg-[image:repeating-conic-gradient(#e8e8e8_0%_25%,#ffffff_0%_50%)] bg-[size:14px_14px]'
+                : 'bg-white',
+            )}
+          />
           <button
             type="button"
             onClick={() => onChange(null)}

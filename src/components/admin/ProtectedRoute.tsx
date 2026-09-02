@@ -4,10 +4,12 @@ import { useAuth } from '@/hooks/useAuth'
 interface ProtectedRouteProps {
   children: React.ReactNode
   requireAdmin?: boolean
+  /** Gate pra área do associado (`/portal`) — exige role === 'associate' em vez de admin/editor. */
+  requireAssociate?: boolean
 }
 
-export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRouteProps) {
-  const { isAuthenticated, isAdmin, isLoading, isInitialized } = useAuth()
+export function ProtectedRoute({ children, requireAdmin = false, requireAssociate = false }: ProtectedRouteProps) {
+  const { isAuthenticated, isAdmin, isAssociate, isLoading, isInitialized } = useAuth()
   const location = useLocation()
 
   if (!isInitialized || isLoading) {
@@ -22,11 +24,23 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin" state={{ from: location }} replace />
+    return <Navigate to={requireAssociate ? '/portal' : '/admin'} state={{ from: location }} replace />
+  }
+
+  // O painel admin (dashboard, tabloides, etc.) é só pra admin/editor — antes só
+  // '/admin/usuarios' tinha um gate de papel, então um associado que caísse em
+  // qualquer outra rota de /admin (ex.: race de redirecionamento no login, ou
+  // link direto) via o painel inteiro em vez de ser mandado pro portal dele.
+  if (!requireAssociate && isAssociate) {
+    return <Navigate to="/portal/produtos" replace />
   }
 
   if (requireAdmin && !isAdmin) {
     return <Navigate to="/admin/dashboard" replace />
+  }
+
+  if (requireAssociate && !isAssociate) {
+    return <Navigate to="/portal" replace />
   }
 
   return <>{children}</>

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { BrandBlocks } from '@/components/layout/BrandBlocks'
+import { revealViewport, slideLeft, imageReveal } from '@/hooks/useScrollAnimation'
 
 const defaultHighlights = [
   'Troca de experiências e boas práticas',
@@ -34,28 +36,28 @@ export function QuemSomosSection() {
   const highlights = about.highlights ?? defaultHighlights
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
+    <section id="grupo" className="py-16 lg:py-20 bg-offwhite overflow-hidden scroll-mt-20">
       <div className="container-site">
-        <div className="grid lg:grid-cols-[1fr_500px] gap-16 xl:gap-24 items-center">
+        <div className="grid lg:grid-cols-[1fr_500px] gap-12 xl:gap-20 items-center">
 
           {/* Left — text */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial="hidden"
+            whileInView="show"
+            viewport={revealViewport}
+            variants={slideLeft}
           >
-            <span className="section-label mb-5 block">{tag}</span>
+            <span className="section-label mb-4 block">{tag}</span>
             <h2 className="text-3xl lg:text-4xl xl:text-5xl heading-editorial text-graphite-900 text-balance">
               {title}{' '}
               <em className="not-italic text-primary-500">{highlight}</em>
             </h2>
-            <p className="mt-6 text-graphite-500 leading-relaxed font-light max-w-lg">{description}</p>
+            <p className="mt-5 text-lg text-graphite-700 leading-relaxed max-w-lg">{description}</p>
 
-            <ul className="mt-8 space-y-3">
+            <ul className="mt-7 space-y-3">
               {highlights.map((b, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm text-graphite-600 font-light">
-                  <span className="w-4 h-[1px] bg-primary-500 flex-shrink-0 mt-2.5" />
+                <li key={i} className="flex items-start gap-3 text-base text-graphite-800 font-medium">
+                  <span className="w-5 h-[3px] bg-primary-500 flex-shrink-0 mt-2.5" />
                   {b}
                 </li>
               ))}
@@ -63,18 +65,18 @@ export function QuemSomosSection() {
 
             <Link
               to="/quem-somos"
-              className="inline-flex items-center gap-2 mt-10 text-sm font-semibold text-graphite-700 hover:text-primary-600 transition-colors border-b border-graphite-300 hover:border-primary-400 pb-0.5"
+              className="inline-flex items-center gap-2 mt-9 text-base font-bold text-graphite-800 hover:text-primary-600 transition-colors border-b-2 border-graphite-300 hover:border-primary-400 pb-0.5"
             >
-              Saiba mais sobre o grupo <ArrowRight size={13} />
+              Saiba mais sobre o grupo <ArrowRight size={15} />
             </Link>
           </motion.div>
 
           {/* Right — image with offset accent */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            initial="hidden"
+            whileInView="show"
+            viewport={revealViewport}
+            variants={imageReveal}
             className="relative"
           >
             <div className="absolute -top-6 -right-6 bottom-6 left-6 bg-graphite-50 -z-10" />
@@ -87,7 +89,7 @@ export function QuemSomosSection() {
                 </div>
               )}
             </div>
-            <div className="absolute -bottom-6 -left-6 w-12 h-12 border-l-2 border-b-2 border-primary-500" />
+            <BrandBlocks className="absolute -bottom-6 -left-6" />
           </motion.div>
         </div>
       </div>

@@ -49,11 +49,19 @@ function EventForm({ open, onClose, event }: { open: boolean; onClose: () => voi
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
       const payload = { ...data, location: data.location || null, description: data.description || null, image_url: data.image_url || null }
-      if (isEdit) { const { error } = await supabase.from('events').update(payload).eq('id', event.id); if (error) throw error }
-      else { const { error } = await supabase.from('events').insert(payload); if (error) throw error }
+      const result = isEdit
+        ? await supabase.from('events').update(payload).eq('id', event.id).select()
+        : await supabase.from('events').insert(payload).select()
+      if (result.error) throw result.error
+      if (!result.data || result.data.length === 0) throw new Error('O evento não foi salvo (nenhuma linha retornada pelo banco).')
+      return result.data[0]
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-events'] }); qc.invalidateQueries({ queryKey: ['events-home'] }); toast.success(isEdit ? 'Evento atualizado!' : 'Evento criado!'); onClose() },
-    onError: (e: Error) => toast.error('Erro ao salvar', e.message),
+    onError: (e: Error) => {
+      console.error('Erro ao salvar evento:', e)
+      toast.error('Erro ao salvar', e.message)
+      window.alert(`Erro ao salvar evento:\n\n${e.message}`)
+    },
   })
 
   return (

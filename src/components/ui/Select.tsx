@@ -7,7 +7,7 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
   error?: string
   hint?: string
   placeholder?: string
-  options: Array<{ value: string; label: string }>
+  options: Array<{ value: string; label: string; disabled?: boolean }>
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -34,7 +34,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           >
             {placeholder && <option value="">{placeholder}</option>}
             {options.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value} disabled={opt.disabled}>{opt.label}</option>
             ))}
           </select>
           <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />

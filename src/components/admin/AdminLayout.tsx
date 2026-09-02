@@ -1,6 +1,7 @@
 import { useUiStore } from '@/stores/uiStore'
 import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
+import { UnlockRequestBanner } from './UnlockRequestBanner'
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -18,6 +19,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         style={{ marginLeft: isAdminSidebarCollapsed ? '72px' : '256px' }}
       >
         <TopBar />
+        <UnlockRequestBanner />
         <main className="flex-1 overflow-y-auto p-6">
           {children}
         </main>

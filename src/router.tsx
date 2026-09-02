@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Outlet } from 'react-router-dom'
+import { createBrowserRouter, Outlet, ScrollRestoration } from 'react-router-dom'
 import { ProtectedRoute } from '@/components/admin/ProtectedRoute'
+import RouteErrorBoundary from '@/components/RouteErrorBoundary'
+import { publicRouteImports } from '@/lib/routePrefetch'
 
 const PageSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -16,18 +18,20 @@ const wrap = (Component: React.ComponentType) => (
 
 // ── Public pages ──────────────────────────────────────────────────────────────
 const PublicLayout = lazy(() => import('@/components/layout/PublicLayout'))
-const Home = lazy(() => import('@/pages/public/Home'))
-const QuemSomos = lazy(() => import('@/pages/public/QuemSomos'))
-const Associados = lazy(() => import('@/pages/public/Associados'))
+const Home = lazy(publicRouteImports['/'])
+const QuemSomos = lazy(publicRouteImports['/quem-somos'])
+const Associados = lazy(publicRouteImports['/associados'])
 const AssociadoDetalhe = lazy(() => import('@/pages/public/AssociadoDetalhe'))
-const Eventos = lazy(() => import('@/pages/public/Eventos'))
+const Eventos = lazy(publicRouteImports['/eventos'])
 const EventoDetalhe = lazy(() => import('@/pages/public/EventoDetalhe'))
-const Fornecedores = lazy(() => import('@/pages/public/Fornecedores'))
-const Blog = lazy(() => import('@/pages/public/Blog'))
+const Fornecedores = lazy(publicRouteImports['/fornecedores'])
+const Blog = lazy(publicRouteImports['/blog'])
 const BlogPost = lazy(() => import('@/pages/public/BlogPost'))
-const Contato = lazy(() => import('@/pages/public/Contato'))
-const QueroMeAssociar = lazy(() => import('@/pages/public/QueroMeAssociar'))
-const SouFornecedor = lazy(() => import('@/pages/public/SouFornecedor'))
+const Contato = lazy(publicRouteImports['/contato'])
+const QueroMeAssociar = lazy(publicRouteImports['/quero-me-associar'])
+const SouFornecedor = lazy(publicRouteImports['/sou-fornecedor'])
+const Estatuto = lazy(publicRouteImports['/estatuto'])
+const CodigoEtica = lazy(publicRouteImports['/codigo-etica'])
 
 // ── Admin pages ───────────────────────────────────────────────────────────────
 const AdminLogin = lazy(() => import('@/pages/admin/Login'))
@@ -45,6 +49,14 @@ const AdminFormularios = lazy(() => import('@/pages/admin/Formularios'))
 const AdminUsuarios = lazy(() => import('@/pages/admin/Usuarios'))
 const AdminConfiguracoes = lazy(() => import('@/pages/admin/Configuracoes'))
 const AdminBanners = lazy(() => import('@/pages/admin/Banners'))
+const AdminMenu = lazy(() => import('@/pages/admin/Menu'))
+const AdminPaginas = lazy(() => import('@/pages/admin/Paginas'))
+const AdminTabloides = lazy(() => import('@/pages/admin/Tabloides'))
+const AdminTabloidePreview = lazy(() => import('@/pages/admin/Tabloides/Preview'))
+
+// ── Portal do associado ──────────────────────────────────────────────────────
+const PortalLayout = lazy(() => import('@/components/portal/PortalLayout'))
+const PortalProdutos = lazy(() => import('@/pages/portal/Produtos'))
 
 export const router = createBrowserRouter([
   // ── Public ────────────────────────────────────────────────────────────────
@@ -55,8 +67,10 @@ export const router = createBrowserRouter([
         <PublicLayout>
           <Outlet />
         </PublicLayout>
+        <ScrollRestoration />
       </Suspense>
     ),
+    errorElement: <RouteErrorBoundary />,
     children: [
       { index: true, element: wrap(Home) },
       { path: 'quem-somos', element: wrap(QuemSomos) },
@@ -70,6 +84,8 @@ export const router = createBrowserRouter([
       { path: 'contato', element: wrap(Contato) },
       { path: 'quero-me-associar', element: wrap(QueroMeAssociar) },
       { path: 'sou-fornecedor', element: wrap(SouFornecedor) },
+      { path: 'estatuto', element: wrap(Estatuto) },
+      { path: 'codigo-etica', element: wrap(CodigoEtica) },
     ],
   },
 
@@ -77,6 +93,7 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     element: wrap(AdminLogin),
+    errorElement: <RouteErrorBoundary />,
   },
 
   // ── Admin (protected) ─────────────────────────────────────────────────────
@@ -88,13 +105,17 @@ export const router = createBrowserRouter([
           <AdminLayout>
             <Outlet />
           </AdminLayout>
+          <ScrollRestoration />
         </Suspense>
       </ProtectedRoute>
     ),
+    errorElement: <RouteErrorBoundary />,
     children: [
       { path: 'dashboard', element: wrap(Dashboard) },
       { path: 'home', element: wrap(HomeEditor) },
       { path: 'banners', element: wrap(AdminBanners) },
+      { path: 'menu', element: wrap(AdminMenu) },
+      { path: 'paginas', element: wrap(AdminPaginas) },
       { path: 'associados', element: wrap(AdminAssociados) },
       { path: 'fornecedores', element: wrap(AdminFornecedores) },
       { path: 'eventos', element: wrap(AdminEventos) },
@@ -114,6 +135,49 @@ export const router = createBrowserRouter([
         ),
       },
       { path: 'configuracoes', element: wrap(AdminConfiguracoes) },
+      { path: 'tabloides', element: wrap(AdminTabloides) },
+    ],
+  },
+
+  // ── Preview/impressão do tabloide — fora do AdminLayout (sem sidebar), pra imprimir limpo ──
+  {
+    path: '/admin/tabloides/:id/preview',
+    element: (
+      <ProtectedRoute>
+        {wrap(AdminTabloidePreview)}
+      </ProtectedRoute>
+    ),
+    errorElement: <RouteErrorBoundary />,
+  },
+
+  // ── Portal do associado — login (mesma tela de /admin, redireciona por role) ─
+  {
+    path: '/portal',
+    element: wrap(AdminLogin),
+    errorElement: <RouteErrorBoundary />,
+  },
+
+  // ── Portal do associado (protegido) ──────────────────────────────────────────
+  {
+    path: '/portal',
+    element: (
+      <ProtectedRoute requireAssociate>
+        <Suspense fallback={<PageSpinner />}>
+          <PortalLayout>
+            <Outlet />
+          </PortalLayout>
+          <ScrollRestoration />
+        </Suspense>
+      </ProtectedRoute>
+    ),
+    // Sem rota `index` de propósito — o React Router não lida bem com duas rotas
+    // irmãs no mesmo path literal ('/portal') quando uma delas tem `index`, o que
+    // causava "Maximum call stack size exceeded" num redirect vindo de dentro da
+    // árvore protegida. `/portal` (path exato) sempre bate só com a rota de login;
+    // a área logada só existe a partir de `/portal/produtos`.
+    errorElement: <RouteErrorBoundary />,
+    children: [
+      { path: 'produtos', element: wrap(PortalProdutos) },
     ],
   },
 ])

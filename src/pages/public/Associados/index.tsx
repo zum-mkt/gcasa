@@ -5,6 +5,7 @@ import { MapPin, ExternalLink, Search } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
 import type { Associate } from '@/types/models'
+import { StoresMap } from '@/components/public/StoresMap'
 
 async function fetchAssociates(): Promise<Associate[]> {
   const { data, error } = await supabase
@@ -26,23 +27,23 @@ export default function AssociadosPage() {
   )
 
   return (
-    <div className="pt-16 min-h-screen bg-gray-50">
-      <div className="bg-dark-900 py-20">
+    <div className="pt-16 min-h-screen bg-offwhite">
+      <div className="texture-concrete texture-concrete--dark bg-graphite-900 py-20">
         <div className="container-site text-center">
-          <span className="section-label text-red-400">Nossos Associados</span>
-          <h1 className="text-4xl md:text-5xl font-display font-light text-white mt-4">
+          <span className="section-label-light">Nossos Associados</span>
+          <h1 className="text-4xl md:text-5xl heading-editorial text-white mt-4">
             Empresas que fazem parte<br />
-            <span className="text-primary-600">do nosso grupo</span>
+            <span className="text-primary-500">do nosso grupo</span>
           </h1>
-          <p className="text-gray-400 mt-4 max-w-xl mx-auto">
+          <p className="text-graphite-300 mt-4 max-w-xl mx-auto">
             Conheça as empresas que compõem o Grupo GCasa e veja como cada uma contribui para um setor mais forte.
           </p>
           <div className="mt-8 relative max-w-md mx-auto">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-graphite-400" />
             <input
               type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Buscar por nome ou cidade..."
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-primary-600 transition-colors text-sm"
+              className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 text-white placeholder-graphite-400 focus:outline-none focus:border-primary-500 transition-colors text-sm"
             />
           </div>
         </div>
@@ -52,32 +53,32 @@ export default function AssociadosPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 animate-pulse">
-                <div className="w-16 h-16 bg-gray-100 rounded-xl mb-4" />
-                <div className="h-4 bg-gray-100 rounded w-3/4 mb-2" />
-                <div className="h-3 bg-gray-100 rounded w-1/2" />
+              <div key={i} className="bg-white p-6 animate-pulse">
+                <div className="w-16 h-16 bg-graphite-100 mb-4" />
+                <div className="h-4 bg-graphite-100 w-3/4 mb-2" />
+                <div className="h-3 bg-graphite-100 w-1/2" />
               </div>
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">Nenhuma empresa encontrada.</div>
+          <div className="text-center py-20 text-graphite-400">Nenhuma empresa encontrada.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((a, i) => (
               <motion.div key={a.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                <Link to={`/associados/${a.slug}`} className="group block bg-white rounded-2xl p-6 shadow-card hover:shadow-dropdown transition-all duration-300 hover:-translate-y-1">
+                <Link to={`/associados/${a.slug}`} className="group block bg-white p-6 shadow-card hover:shadow-dropdown transition-all duration-300 hover:-translate-y-1">
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                      {a.logo_url ? <img src={a.logo_url} alt={a.name} className="w-full h-full object-contain p-2" /> : <span className="text-2xl font-bold text-gray-300">{a.name[0]}</span>}
+                    <div className="w-16 h-16 bg-graphite-50 border border-graphite-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      {a.logo_url ? <img src={a.logo_url} alt={a.name} className="w-full h-full object-contain p-2" /> : <span className="text-2xl heading-editorial text-graphite-300">{a.name[0]}</span>}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">{a.name}</h3>
-                      {a.city && <p className="text-sm text-gray-400 flex items-center gap-1 mt-1"><MapPin size={12} />{a.city}, {a.state}</p>}
-                      {a.category?.name && <span className="inline-block mt-2 text-xs font-medium bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{a.category.name}</span>}
+                      <h3 className="font-bold text-graphite-900 group-hover:text-primary-600 transition-colors">{a.name}</h3>
+                      {a.city && <p className="text-sm text-graphite-500 flex items-center gap-1 mt-1"><MapPin size={12} />{a.city}, {a.state}</p>}
+                      {a.category?.name && <span className="inline-block mt-2 text-[0.65rem] font-bold uppercase tracking-widest text-primary-500">{a.category.name}</span>}
                     </div>
                   </div>
-                  {a.description && <p className="text-sm text-gray-500 line-clamp-2">{a.description}</p>}
-                  <div className="mt-4 flex items-center text-xs text-primary-600 font-medium gap-1 group-hover:gap-2 transition-all">
+                  {a.description && <p className="text-sm text-graphite-600 line-clamp-2">{a.description}</p>}
+                  <div className="mt-4 flex items-center text-xs text-primary-600 font-bold gap-1 group-hover:gap-2 transition-all">
                     Ver perfil <ExternalLink size={12} />
                   </div>
                 </Link>
@@ -86,6 +87,8 @@ export default function AssociadosPage() {
           </div>
         )}
       </div>
+
+      <StoresMap associates={data.map((a) => ({ name: a.name, slug: a.slug }))} />
     </div>
   )
 }

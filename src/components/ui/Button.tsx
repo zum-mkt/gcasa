@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-600',
+        primary: 'bg-primary-500 text-graphite-900 hover:bg-primary-600 focus-visible:ring-primary-500',
         secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200 focus-visible:ring-gray-400',
         outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus-visible:ring-gray-400',
         ghost: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
@@ -44,6 +44,11 @@ interface ButtonProps
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, loading, children, leftIcon, rightIcon, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
+    // Com asChild, o Comp vira o <Slot> do Radix, que exige exatamente UM
+    // elemento filho — por isso não dá pra envolver com o ícone de
+    // loading/leftIcon/rightIcon nesse caso (children sozinho já é o
+    // elemento real, tipo um <Link>). Sem asChild, é um <button> normal e
+    // pode ter quantos filhos quiser.
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
@@ -51,9 +56,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         {...props}
       >
-        {loading ? <Loader2 size={14} className="animate-spin" /> : leftIcon}
-        {children}
-        {!loading && rightIcon}
+        {asChild ? children : (
+          <>
+            {loading ? <Loader2 size={14} className="animate-spin" /> : leftIcon}
+            {children}
+            {!loading && rightIcon}
+          </>
+        )}
       </Comp>
     )
   }

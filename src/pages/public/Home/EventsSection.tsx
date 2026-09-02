@@ -5,6 +5,9 @@ import { motion } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
 import { formatDateShort } from '@/lib/utils'
 import type { GcasaEvent } from '@/types/models'
+import { revealViewport, slideLeft, staggerContainer, staggerItem, hoverLiftGold } from '@/hooks/useScrollAnimation'
+
+const MotionLink = motion(Link)
 
 async function fetchEvents(): Promise<GcasaEvent[]> {
   const { data } = await supabase
@@ -18,9 +21,10 @@ async function fetchEvents(): Promise<GcasaEvent[]> {
 
 function EventCard({ event, large = false }: { event: GcasaEvent; large?: boolean }) {
   return (
-    <Link
+    <MotionLink
+      variants={staggerItem}
       to={`/eventos/${event.slug}`}
-      className={`group relative overflow-hidden block bg-graphite-100 ${large ? 'h-[480px]' : 'h-[228px]'}`}
+      className={`group relative overflow-hidden block bg-graphite-100 ${hoverLiftGold} ${large ? 'h-[480px]' : 'h-[228px]'}`}
     >
       {event.image_url ? (
         <img
@@ -36,37 +40,45 @@ function EventCard({ event, large = false }: { event: GcasaEvent; large?: boolea
 
       <div className="absolute bottom-0 left-0 right-0 p-5">
         {event.date && (
-          <span className="text-[0.6rem] text-primary-400 font-bold tracking-widest uppercase mb-2 block">
+          <span className="text-xs text-primary-400 font-extrabold tracking-wide uppercase mb-2 block">
             {formatDateShort(event.date)}
           </span>
         )}
-        <h3 className={`heading-editorial text-white text-balance leading-tight ${large ? 'text-xl' : 'text-sm'}`}>
+        <h3 className={`heading-editorial text-white text-balance leading-tight ${large ? 'text-2xl' : 'text-base'}`}>
           {event.title}
         </h3>
         {event.location && (
-          <p className="flex items-center gap-1 text-[0.65rem] text-white/40 mt-2">
-            <MapPin size={9} />
+          <p className="flex items-center gap-1 text-xs text-white/70 mt-2 font-medium">
+            <MapPin size={11} />
             {event.location}
           </p>
         )}
-        <span className="inline-flex items-center gap-1.5 mt-3 text-[0.65rem] text-white/60 group-hover:text-primary-400 font-semibold tracking-wider uppercase transition-colors">
-          Saiba mais <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
+        <span className="inline-flex items-center gap-1.5 mt-3 text-xs text-white/90 group-hover:text-primary-400 font-bold tracking-wide uppercase transition-colors">
+          Saiba mais <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
         </span>
       </div>
-    </Link>
+    </MotionLink>
   )
 }
 
 export function EventsSection() {
-  const { data: events = [] } = useQuery({ queryKey: ['events-home'], queryFn: fetchEvents })
+  const { data: events = [], isLoading } = useQuery({ queryKey: ['events-home'], queryFn: fetchEvents })
+
+  if (!isLoading && events.length === 0) return null
 
   const [main, ...rest] = events
   const secondaries = rest.slice(0, 4)
 
   return (
-    <section className="py-24 bg-offwhite">
+    <section id="eventos" className="py-16 lg:py-20 bg-offwhite scroll-mt-20">
       <div className="container-site">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={revealViewport}
+          variants={slideLeft}
+          className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10"
+        >
           <div>
             <span className="section-label mb-4 block">EVENTOS E CAPACITAÇÕES</span>
             <h2 className="text-3xl lg:text-4xl heading-editorial text-graphite-900 text-balance">
@@ -75,13 +87,13 @@ export function EventsSection() {
           </div>
           <Link
             to="/eventos"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-graphite-700 hover:text-primary-600 border-b border-graphite-300 hover:border-primary-400 pb-0.5 transition-colors self-start lg:self-auto"
+            className="inline-flex items-center gap-2 text-base font-bold text-graphite-800 hover:text-primary-600 border-b-2 border-graphite-300 hover:border-primary-400 pb-0.5 transition-colors self-start lg:self-auto"
           >
-            Ver todos os eventos <ArrowRight size={13} />
+            Ver todos os eventos <ArrowRight size={15} />
           </Link>
-        </div>
+        </motion.div>
 
-        {events.length === 0 ? (
+        {isLoading ? (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-1">
             <div className="bg-graphite-100 h-[480px] animate-pulse" />
             <div className="grid grid-cols-2 gap-1">
@@ -90,10 +102,10 @@ export function EventsSection() {
           </div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial="hidden"
+            whileInView="show"
+            viewport={revealViewport}
+            variants={staggerContainer(0.1)}
             className="grid grid-cols-1 lg:grid-cols-[55%_1fr] gap-1"
           >
             {main && <EventCard event={main} large />}

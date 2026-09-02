@@ -28,7 +28,7 @@ const defaultForm: BannerForm = {
   text: '',
   link_label: '',
   link_href: '',
-  bg_color: '#E8630A',
+  bg_color: '#FAB136',
   text_color: '#ffffff',
   image_url: null,
   active: true,
@@ -107,7 +107,7 @@ export default function AdminBanners() {
       text: b.text,
       link_label: b.link_label ?? '',
       link_href: b.link_href ?? '',
-      bg_color: b.bg_color ?? '#E8630A',
+      bg_color: b.bg_color ?? '#FAB136',
       text_color: b.text_color ?? '#ffffff',
       image_url: b.image_url ?? null,
       active: b.active,
@@ -253,12 +253,12 @@ export default function AdminBanners() {
               {/* Mini preview */}
               <div
                 className="flex items-center justify-center h-9 text-xs font-medium relative overflow-hidden"
-                style={{ background: b.image_url ? undefined : (b.bg_color ?? '#E8630A'), color: b.text_color ?? '#fff' }}
+                style={{ background: b.image_url ? undefined : (b.bg_color ?? '#FAB136'), color: b.text_color ?? '#fff' }}
               >
                 {b.image_url && (
                   <>
                     <img src={b.image_url} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0" style={{ background: `${b.bg_color ?? '#E8630A'}99` }} />
+                    <div className="absolute inset-0" style={{ background: `${b.bg_color ?? '#FAB136'}99` }} />
                   </>
                 )}
                 <span className="relative">{b.text}</span>

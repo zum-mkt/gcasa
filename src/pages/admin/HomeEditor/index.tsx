@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/admin/PageHeader'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
 import { ImageUpload } from '@/components/admin/ImageUpload'
+import { VideoUpload } from '@/components/admin/VideoUpload'
 import { toast } from '@/components/ui/Toast'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 import { cn } from '@/lib/utils'
@@ -15,11 +16,13 @@ type HeroContent = {
   cta_primary_label: string; cta_primary_href: string
   cta_secondary_label: string; cta_secondary_href: string
   image_url?: string | null
+  media_type?: 'image' | 'video'
+  video_url?: string | null
 }
 
 type StatsContent = { items: Array<{ value: string; label: string; suffix?: string }> }
 type AboutContent = { tag: string; title: string; title_highlight: string; description: string; image_url?: string; highlights?: string[] }
-type BenefitsContent = { tag?: string; title?: string; items: Array<{ icon: string; title: string; description: string }> }
+type BenefitsContent = { tag?: string; title?: string; image_url?: string; items: Array<{ icon: string; title: string; description: string }> }
 type CtaContent = { title: string; description: string; cta_primary_label: string; cta_primary_href: string; cta_secondary_label: string; cta_secondary_href: string }
 
 const AVAILABLE_ICONS = ['BarChart2','Users','Handshake','GraduationCap','Lightbulb','TrendingUp','Star','Shield','Target','Award','Zap','Heart','Globe','Building2','Truck','Package']
@@ -107,14 +110,50 @@ function HeroEditor({ initial, onSave, saving }: { initial: HeroContent; onSave:
           <Input label="Botão secundário — texto" value={form.cta_secondary_label} onChange={set('cta_secondary_label')} />
           <Input label="Botão secundário — link" value={form.cta_secondary_href} onChange={set('cta_secondary_href')} />
         </div>
-        <ImageUpload
-          label="Imagem de fundo do hero"
-          hint="Foto de alta resolução (1920×1080px ou maior). JPG ou WebP."
-          value={form.image_url ?? null}
-          onChange={v => setForm(f => ({ ...f, image_url: v }))}
-          bucket="gcasa-public"
-          folder="hero"
-        />
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-1.5">Fundo do hero</p>
+          <div className="inline-flex rounded-xl bg-gray-100 p-1 mb-3">
+            <button
+              type="button"
+              onClick={() => setForm(f => ({ ...f, media_type: 'image' }))}
+              className={cn(
+                'px-4 py-1.5 text-sm font-medium rounded-lg transition-colors',
+                (form.media_type ?? 'image') === 'image' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+              )}
+            >
+              Foto
+            </button>
+            <button
+              type="button"
+              onClick={() => setForm(f => ({ ...f, media_type: 'video' }))}
+              className={cn(
+                'px-4 py-1.5 text-sm font-medium rounded-lg transition-colors',
+                form.media_type === 'video' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+              )}
+            >
+              Vídeo
+            </button>
+          </div>
+
+          {(form.media_type ?? 'image') === 'image' ? (
+            <ImageUpload
+              hint="Foto de alta resolução (1920×1080px ou maior). JPG ou WebP."
+              value={form.image_url ?? null}
+              onChange={v => setForm(f => ({ ...f, image_url: v }))}
+              bucket="gcasa-public"
+              folder="hero"
+            />
+          ) : (
+            <VideoUpload
+              hint="Vídeo curto (10–20s), sem áudio necessário — toca em loop automático no fundo."
+              value={form.video_url ?? null}
+              onChange={v => setForm(f => ({ ...f, video_url: v }))}
+              bucket="gcasa-public"
+              folder="hero"
+              maxSizeMb={25}
+            />
+          )}
+        </div>
         <Button leftIcon={<Save size={14} />} loading={saving} onClick={() => onSave(form)}>Salvar Hero</Button>
       </SectionCard>
     </div>
@@ -190,6 +229,7 @@ function BenefitsEditor({ initial, onSave, saving }: { initial: BenefitsContent;
         <Input label="Tag" value={form.tag ?? ''} onChange={e => setForm(f => ({ ...f, tag: e.target.value }))} />
         <Input label="Título" value={form.title ?? ''} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
       </div>
+      <ImageUpload label="Foto da seção" value={form.image_url ?? ''} onChange={url => setForm(f => ({ ...f, image_url: url ?? undefined }))} bucket="site-assets" folder="benefits" />
       <div className="space-y-4 mt-2">
         {items.map((item, i) => (
           <div key={i} className="border border-gray-200 rounded-xl p-4 space-y-3">

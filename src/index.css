@@ -2,46 +2,54 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Orange institucional */
-  --color-primary-50:  #fff4ec;
-  --color-primary-100: #ffe4cc;
-  --color-primary-400: #f07a2a;
-  --color-primary-500: #E8630A;
-  --color-primary-600: #D4560A;
-  --color-primary-700: #B84A08;
-  --color-primary-800: #9A3E06;
+  /* Amarelo/laranja GCasa — paleta oficial da marca (2026) */
+  --color-primary-50:  #FFF8E9;
+  --color-primary-100: #FFEFC9;
+  --color-primary-200: #FDE29B;
+  --color-primary-300: #FDD87A;
+  --color-primary-400: #FCC55A;
+  --color-primary-500: #FAB136;
+  --color-primary-600: #E09A20;
+  --color-primary-700: #C0821A;
+  --color-primary-800: #9A6814;
+  --color-primary-900: #7A5310;
 
-  /* Dourado */
-  --color-golden-400: #D4A84B;
-  --color-golden-500: #C9922A;
+  /* Dourado — destaques e brilhos, mesma família do amarelo/laranja principal */
+  --color-golden-400: #FCC55A;
+  --color-golden-500: #FAB136;
 
-  /* Azul escuro (hero / cta / depoimentos) */
-  --color-navy-950: #060F20;
-  --color-navy-900: #0D1F3C;
-  --color-navy-800: #152845;
-  --color-navy-700: #1E3557;
+  /* Cinza GCasa — fundos escuros (hero / cta / depoimentos), substitui o azul-marinho antigo */
+  --color-dark-950: #302E2E;
+  --color-dark-900: #3D3B3B;
+  --color-dark-800: #4A4848;
+  --color-dark-700: #5A5858;
+  --color-dark-600: #757272;
 
-  /* Grafite e cinzas */
-  --color-graphite-900: #1A1A1A;
-  --color-graphite-700: #333333;
-  --color-graphite-500: #666666;
-  --color-graphite-300: #999999;
-  --color-graphite-100: #E8E8E4;
-  --color-graphite-50:  #F2F1ED;
+  /* Grafite e cinzas — textos e superfícies claras */
+  --color-graphite-950: #302E2E;
+  --color-graphite-900: #3D3B3B;
+  --color-graphite-800: #4A4848;
+  --color-graphite-700: #5A5858;
+  --color-graphite-600: #656363;
+  --color-graphite-500: #757272;
+  --color-graphite-400: #979492;
+  --color-graphite-300: #B8B5B1;
+  --color-graphite-200: #D6D3CF;
+  --color-graphite-100: #E8E6E3;
+  --color-graphite-50:  #F5F3F0;
 
   /* Off-white */
-  --color-offwhite: #FAFAF8;
+  --color-offwhite: #F5F3F0;
 
-  /* Legado (para compatibilidade com admin) */
-  --color-dark-950: #060F20;
-  --color-dark-900: #0D1F3C;
-  --color-dark-800: #152845;
-  --color-dark-700: #1E3557;
-  --color-dark-600: #2A4466;
-
-  /* Typography */
-  --font-sans: "Avenir LT", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "DIN Next", "Avenir LT", ui-sans-serif, system-ui, sans-serif;
+  /* Typography — conforme o Manual de Identidade: ACIER BAT (títulos/campanhas),
+     Ariana Pro Book + Jost Regular (texto). Ariana Pro e Acier BAT são fontes pagas
+     que ainda não temos licenciadas no projeto — assim que os arquivos chegarem, é só
+     descomentar o @font-face correspondente (abaixo) que essas duas entram sozinhas,
+     sem precisar mexer aqui. Até lá, uso substitutas do Google Fonts com espírito
+     parecido: Anton (geométrica, black, para títulos de impacto) e Poppins
+     (geométrica arredondada, para texto) — ambas já auto-hospedadas. */
+  --font-sans: "Ariana Pro", "Poppins", "Jost", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Acier BAT", "Anton", "Jost", ui-sans-serif, system-ui, sans-serif;
 
   /* Shadows */
   --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
@@ -49,33 +57,86 @@
 }
 
 @layer base {
+  /* Jost — fonte variável, grátis (SIL OFL), auto-hospedada. Cobre pesos 100–900. */
   @font-face {
-    font-family: "Avenir LT";
+    font-family: "Jost";
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/jost-variable.woff2") format("woff2-variations"), url("/assets/fonts/jost-variable.woff2") format("woff2");
+  }
+
+  /* Anton — substituta grátis (Google Fonts) pra ACIER BAT enquanto não temos a licenciada */
+  @font-face {
+    font-family: "Anton";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/anton-400.woff2") format("woff2");
+  }
+
+  /* Poppins — substituta grátis (Google Fonts) pra Ariana Pro Book enquanto não temos a licenciada */
+  @font-face {
+    font-family: "Poppins";
     font-weight: 300;
     font-style: normal;
     font-display: swap;
-    src: url("/assets/fonts/avenir-lt-w05_35-light-128.woff2") format("woff2");
+    src: url("/assets/fonts/poppins-300.woff2") format("woff2");
   }
-
   @font-face {
-    font-family: "Avenir LT";
+    font-family: "Poppins";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/poppins-400.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Poppins";
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/poppins-500.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Poppins";
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/poppins-600.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Poppins";
     font-weight: 700;
     font-style: normal;
     font-display: swap;
-    src: url("/assets/fonts/avenir-lt-w01_85-heavy1475544-131.woff2") format("woff2");
+    src: url("/assets/fonts/poppins-700.woff2") format("woff2");
+  }
+
+  /* ACIER BAT (títulos) e Ariana Pro Book (texto) são fontes pagas do Manual de
+     Identidade — ainda não temos os arquivos licenciados no projeto. Assim que
+     chegarem (.woff2 de preferência), colocar em /public/assets/fonts/ e
+     descomentar os blocos abaixo com o nome de arquivo correto. */
+  /*
+  @font-face {
+    font-family: "Acier BAT";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/assets/fonts/acier-bat.woff2") format("woff2");
   }
 
   @font-face {
-    font-family: "DIN Next";
-    font-weight: 300;
+    font-family: "Ariana Pro";
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
-    src: url("/assets/fonts/din-next-w01-light-134.woff2") format("woff2");
+    src: url("/assets/fonts/ariana-pro-book.woff2") format("woff2");
   }
+  */
 
   *, *::before, *::after {
     box-sizing: border-box;
-    border-color: var(--color-border, #E8E8E4);
+    border-color: var(--color-border, #E8E6E3);
   }
 
   html {
@@ -89,7 +150,7 @@
     margin: 0;
     padding: 0;
     font-family: var(--font-sans);
-    color: #333333;
+    color: #3D3B3B;
     background: #ffffff;
     line-height: 1.7;
   }
@@ -101,16 +162,31 @@
   }
 
   ::selection {
-    background-color: #E8630A;
-    color: #ffffff;
+    background-color: #FAB136;
+    color: #3D3B3B;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  /* Anton/Acier BAT são fontes de DISPLAY — feitas pra títulos grandes de impacto
+     ("TÍTULOS/CAMPANHAS" no manual da marca). Em títulos pequenos (cards, labels,
+     subtítulos de modal) elas ficam condensadas/pesadas demais e prejudicam a
+     leitura. Por isso só h1 usa a fonte de display por padrão; h2–h6 usam a fonte
+     de texto (Poppins/Ariana Pro) em negrito — ainda com hierarquia visual clara,
+     mas legível em qualquer tamanho. Seções que querem o efeito editorial grande
+     usam a classe .heading-editorial explicitamente, independente do nível do h. */
+  h1 {
     font-family: var(--font-display);
     line-height: 1.15;
-    color: #1A1A1A;
+    color: #3D3B3B;
     margin: 0;
-    font-weight: 300;
+    font-weight: 400;
+  }
+
+  h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    line-height: 1.3;
+    color: #3D3B3B;
+    margin: 0;
+    font-weight: 700;
   }
 
   p { margin: 0; }
@@ -123,20 +199,20 @@
 @layer utilities {
   .section-label {
     display: inline-block;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #E8630A;
+    color: #FAB136;
   }
 
   .section-label-light {
     display: inline-block;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
+    color: rgba(255,255,255,0.75);
   }
 
   .container-site {
@@ -158,11 +234,66 @@
     display: none;
   }
 
-  /* Editorial heading */
+  /* Heading de destaque — Anton só tem a face 400 registrada (linha ~68); pedir 700/800
+     aqui força o navegador a fazer bold sintético (stroke grosso e borrado), que é
+     justamente o que prejudicava a leitura dos títulos. Anton já é uma fonte black por
+     natureza, então 400 real cobre o peso "forte" que o público de construção espera. */
   .heading-editorial {
     font-family: var(--font-display);
-    font-weight: 300;
-    letter-spacing: -0.01em;
-    line-height: 1.1;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.2;
   }
+
+  /* Textura de concreto discreta — gerada via CSS/SVG, sem asset externo */
+  .texture-concrete {
+    position: relative;
+    isolation: isolate;
+  }
+  .texture-concrete::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(0,0,0,0.05) 0, transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(0,0,0,0.05) 0, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .texture-concrete--dark::before {
+    mix-blend-mode: screen;
+    opacity: 0.35;
+  }
+  .texture-concrete > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Leaflet — Tailwind preflight quebra img/botões internos do mapa */
+.stores-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: #e8e6e3;
+  font-family: inherit;
+  z-index: 0;
+}
+.stores-map .leaflet-container img {
+  max-width: none;
+}
+.stores-map .leaflet-popup-content-wrapper {
+  border-radius: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.stores-map .leaflet-popup-content {
+  margin: 12px 14px;
+}
+.stores-map .leaflet-control-zoom a {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  color: #3d3b3b !important;
 }
