@@ -17,27 +17,42 @@ const SvgFacebook = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
 )
 
+const navLinkClass = 'text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors'
+
+function FooterNavLink({ href, label }: { href: string; label: string }) {
+  const external = href.startsWith('http')
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" className={navLinkClass}>
+        {label}
+      </a>
+    )
+  }
+  return <Link to={href} className={navLinkClass}>{label}</Link>
+}
+
 const navigation = {
   grupo: [
     { label: 'Quem Somos', href: '/quem-somos' },
     { label: 'Associados', href: '/associados' },
     { label: 'Eventos', href: '/eventos' },
     { label: 'Fornecedores', href: '/fornecedores' },
-    { label: 'Conteúdo', href: '/blog' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Contato', href: '/contato' },
   ],
   institucional: [
     { label: 'Missão, Visão e Valores', href: '/quem-somos#missao' },
-    { label: 'Linha do Tempo', href: '/quem-somos#historia' },
+    { label: 'Nossa história', href: '/quem-somos#historia' },
     { label: 'Estatuto', href: '/estatuto' },
     { label: 'Código de Ética', href: '/codigo-etica' },
+    { label: 'Plataforma EAD', href: 'https://ead.grupogcasa.com.br/' },
   ],
   associados: [
-    { label: 'Benefícios', href: '/quem-somos#beneficios' },
-    { label: 'Como se associar', href: '/quero-me-associar' },
     { label: 'Empresas associadas', href: '/associados' },
-    { label: 'Eventos exclusivos', href: '/eventos' },
-    { label: 'Capacitações', href: '/eventos' },
+    { label: 'Benefícios', href: '/quem-somos#beneficios' },
+    { label: 'Quero me associar', href: '/quero-me-associar' },
+    { label: 'Área do associado', href: '/portal' },
+    { label: 'Quero ser fornecedor', href: '/sou-fornecedor' },
   ],
 }
 
@@ -118,7 +133,7 @@ export function Footer() {
             <ul className="space-y-2.5">
               {navigation.grupo.map((item) => (
                 <li key={item.href}>
-                  <Link to={item.href} className="text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">{item.label}</Link>
+                  <FooterNavLink href={item.href} label={item.label} />
                 </li>
               ))}
             </ul>
@@ -129,7 +144,7 @@ export function Footer() {
             <ul className="space-y-2.5">
               {navigation.institucional.map((item) => (
                 <li key={item.href}>
-                  <Link to={item.href} className="text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">{item.label}</Link>
+                  <FooterNavLink href={item.href} label={item.label} />
                 </li>
               ))}
             </ul>
@@ -140,7 +155,7 @@ export function Footer() {
             <ul className="space-y-2.5">
               {navigation.associados.map((item) => (
                 <li key={item.href}>
-                  <Link to={item.href} className="text-base font-medium text-graphite-300 hover:text-primary-400 transition-colors">{item.label}</Link>
+                  <FooterNavLink href={item.href} label={item.label} />
                 </li>
               ))}
             </ul>

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Plus, Trash2, Eye, EyeOff, Edit2, ArrowUp, ArrowDown, Link2, Anchor, FileText } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useMenuItems } from '@/hooks/useMenuItems'
+import { buildMenuTree } from '@/lib/menuTree'
 import type { MenuItem, MenuItemType } from '@/types/menu'
 
 type MenuForm = {
@@ -14,22 +15,24 @@ type MenuForm = {
   path: string
   open_new_tab: boolean
   is_active: boolean
+  parent_id: string
 }
 
 const defaultForm: MenuForm = {
   label: '',
-  type: 'anchor',
+  type: 'internal_page',
   url: '',
   anchor: '',
   path: '',
   open_new_tab: false,
   is_active: true,
+  parent_id: '',
 }
 
 const typeOptions: { value: MenuItemType; label: string; hint: string; icon: typeof Link2 }[] = [
-  { value: 'anchor', label: 'Âncora', hint: 'Rola até uma seção da Home (ex: grupo, associados, parceiros, contato, eventos)', icon: Anchor },
+  { value: 'internal_page', label: 'Página Interna', hint: 'Rota do site. Pode incluir âncora: /quem-somos#missao', icon: FileText },
   { value: 'external_url', label: 'URL Externa', hint: 'Abre um site fora do GCasa (ex: plataforma EAD)', icon: Link2 },
-  { value: 'internal_page', label: 'Página Interna', hint: 'Aponta pra uma rota que já existe no site (ex: /blog)', icon: FileText },
+  { value: 'anchor', label: 'Âncora na Home', hint: 'Rola até uma seção da Home (ex: grupo, associados, parceiros)', icon: Anchor },
 ]
 
 function destinationLabel(item: MenuItem) {
@@ -44,17 +47,27 @@ export default function AdminMenu() {
   const [showForm, setShowForm] = useState(false)
 
   const { data: items = [], isLoading } = useMenuItems({ includeInactive: true })
+  const tree = buildMenuTree(items)
+  const topLevel = items.filter((i) => !i.parent_id)
 
   const { register, handleSubmit, reset, watch, formState: { isSubmitting } } = useForm<MenuForm>({
     defaultValues: defaultForm,
   })
 
   const type = watch('type')
+  const parentId = watch('parent_id')
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ['menu-items'] })
 
+  const siblingsOf = (parent_id: string | null) =>
+    items
+      .filter((i) => (i.parent_id ?? null) === parent_id)
+      .sort((a, b) => a.order_index - b.order_index)
+
   const saveMutation = useMutation({
     mutationFn: async (data: MenuForm) => {
+      const parent_id = data.parent_id || null
+      const siblings = siblingsOf(parent_id).filter((i) => i.id !== editing?.id)
       const payload = {
         label: data.label,
         type: data.type,
@@ -63,7 +76,8 @@ export default function AdminMenu() {
         path: data.type === 'internal_page' ? data.path : null,
         open_new_tab: data.type === 'external_url' ? data.open_new_tab : false,
         is_active: data.is_active,
-        order_index: editing?.order_index ?? items.length,
+        parent_id,
+        order_index: editing?.order_index ?? siblings.length,
       }
       if (editing) {
         await supabase.from('menu_items').update(payload).eq('id', editing.id)
@@ -103,18 +117,17 @@ export default function AdminMenu() {
     onSuccess: invalidate,
   })
 
-  const moveUp = (index: number) => {
-    if (index === 0) return
-    reorderMutation.mutate({ a: items[index], b: items[index - 1] })
-  }
-  const moveDown = (index: number) => {
-    if (index === items.length - 1) return
-    reorderMutation.mutate({ a: items[index], b: items[index + 1] })
+  const move = (item: MenuItem, dir: -1 | 1) => {
+    const siblings = siblingsOf(item.parent_id ?? null)
+    const index = siblings.findIndex((s) => s.id === item.id)
+    const swap = siblings[index + dir]
+    if (!swap) return
+    reorderMutation.mutate({ a: item, b: swap })
   }
 
-  const openCreate = () => {
+  const openCreate = (parent_id = '') => {
     setEditing(null)
-    reset(defaultForm)
+    reset({ ...defaultForm, parent_id })
     setShowForm(true)
   }
 
@@ -128,28 +141,35 @@ export default function AdminMenu() {
       path: item.path ?? '',
       open_new_tab: item.open_new_tab,
       is_active: item.is_active,
+      parent_id: item.parent_id ?? '',
     })
     setShowForm(true)
   }
 
   const cancelForm = () => { setShowForm(false); setEditing(null); reset(defaultForm) }
 
+  const editingHasChildren = editing ? items.some((i) => i.parent_id === editing.id) : false
+  const parentOptions = topLevel
+    .filter((i) => i.id !== editing?.id)
+    .map((i) => ({ value: i.id, label: i.label }))
+
+  const childCount = (id: string) => items.filter((i) => i.parent_id === id).length
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-gray-900">Menu Principal</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Itens exibidos no menu do topo do site público</p>
+          <p className="text-sm text-gray-500 mt-0.5">Itens e submenus do topo do site público, agrupados por contexto</p>
         </div>
         <button
-          onClick={openCreate}
+          onClick={() => openCreate()}
           className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
         >
           <Plus size={16} /> Novo item
         </button>
       </div>
 
-      {/* Form */}
       {showForm && (
         <form
           onSubmit={handleSubmit((d) => saveMutation.mutate(d))}
@@ -161,9 +181,30 @@ export default function AdminMenu() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Nome do menu *</label>
             <input
               {...register('label', { required: true })}
-              placeholder="Ex: EAD"
+              placeholder="Ex: O Grupo"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Item pai</label>
+            <select
+              {...register('parent_id')}
+              disabled={editingHasChildren}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-400"
+            >
+              <option value="">Nenhum — item do menu principal</option>
+              {parentOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-400 mt-1">
+              {editingHasChildren
+                ? 'Este item já tem submenu, então permanece no menu principal.'
+                : parentId
+                  ? 'Vai aparecer no submenu deste item.'
+                  : 'Fica na barra principal. Pode receber subitens depois.'}
+            </p>
           </div>
 
           <div>
@@ -224,10 +265,12 @@ export default function AdminMenu() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Rota interna *</label>
               <input
                 {...register('path', { required: type === 'internal_page' })}
-                placeholder="/blog"
+                placeholder="/quem-somos#missao"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
-              <p className="text-xs text-gray-400 mt-1">Precisa ser uma rota que já existe no site (ex: /blog, /quero-me-associar, /sou-fornecedor)</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Rotas: /quem-somos, /associados, /eventos, /fornecedores, /blog, /contato, /quero-me-associar, /sou-fornecedor, /estatuto, /codigo-etica, /portal. Âncoras: #missao, #historia, #beneficios.
+              </p>
             </div>
           )}
 
@@ -251,7 +294,6 @@ export default function AdminMenu() {
         </form>
       )}
 
-      {/* List */}
       {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />)}
@@ -262,48 +304,119 @@ export default function AdminMenu() {
         </div>
       ) : (
         <div className="space-y-2">
-          {items.map((item, i) => {
-            const typeOpt = typeOptions.find(t => t.value === item.type)
-            const Icon = typeOpt?.icon ?? Link2
-            return (
-              <div key={item.id} className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3">
-                <div className="flex flex-col gap-0.5 flex-shrink-0">
-                  <button onClick={() => moveUp(i)} disabled={i === 0} className="p-0.5 text-gray-300 hover:text-gray-700 disabled:opacity-30 disabled:hover:text-gray-300 transition-colors" title="Mover para cima">
-                    <ArrowUp size={14} />
-                  </button>
-                  <button onClick={() => moveDown(i)} disabled={i === items.length - 1} className="p-0.5 text-gray-300 hover:text-gray-700 disabled:opacity-30 disabled:hover:text-gray-300 transition-colors" title="Mover para baixo">
-                    <ArrowDown size={14} />
-                  </button>
+          {tree.map((node, i) => (
+            <div key={node.item.id} className="space-y-2">
+              <MenuRow
+                item={node.item}
+                isFirst={i === 0}
+                isLast={i === tree.length - 1}
+                childCount={node.children.length}
+                onMove={move}
+                onToggle={() => toggleMutation.mutate({ id: node.item.id, is_active: !node.item.is_active })}
+                onEdit={() => openEdit(node.item)}
+                onAddChild={() => openCreate(node.item.id)}
+                onDelete={() => {
+                  const extra = childCount(node.item.id)
+                  const msg = extra > 0
+                    ? `Remover "${node.item.label}" e os ${extra} subitens?`
+                    : `Remover "${node.item.label}" do menu?`
+                  if (confirm(msg)) deleteMutation.mutate(node.item.id)
+                }}
+              />
+              {node.children.map((child, ci) => (
+                <div key={child.id} className="pl-8">
+                  <MenuRow
+                    item={child}
+                    isFirst={ci === 0}
+                    isLast={ci === node.children.length - 1}
+                    nested
+                    onMove={move}
+                    onToggle={() => toggleMutation.mutate({ id: child.id, is_active: !child.is_active })}
+                    onEdit={() => openEdit(child)}
+                    onDelete={() => {
+                      if (confirm(`Remover "${child.label}" do submenu?`)) deleteMutation.mutate(child.id)
+                    }}
+                  />
                 </div>
-
-                <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0">
-                  <Icon size={15} className="text-gray-500" />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 truncate">{item.label}</p>
-                  <p className="text-xs text-gray-400 truncate">{typeOpt?.label} → {destinationLabel(item)}</p>
-                </div>
-
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${item.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                  {item.is_active ? 'Ativo' : 'Inativo'}
-                </span>
-
-                <div className="flex items-center gap-1 flex-shrink-0">
-                  <button onClick={() => toggleMutation.mutate({ id: item.id, is_active: !item.is_active })} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors" title={item.is_active ? 'Desativar' : 'Ativar'}>
-                    {item.is_active ? <EyeOff size={15} /> : <Eye size={15} />}
-                  </button>
-                  <button onClick={() => openEdit(item)} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors" title="Editar">
-                    <Edit2 size={15} />
-                  </button>
-                  <button onClick={() => { if (confirm(`Remover "${item.label}" do menu?`)) deleteMutation.mutate(item.id) }} className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors" title="Remover">
-                    <Trash2 size={15} />
-                  </button>
-                </div>
-              </div>
-            )
-          })}
+              ))}
+            </div>
+          ))}
         </div>
+      )}
+    </div>
+  )
+}
+
+function MenuRow({
+  item,
+  isFirst,
+  isLast,
+  nested,
+  childCount,
+  onMove,
+  onToggle,
+  onEdit,
+  onAddChild,
+  onDelete,
+}: {
+  item: MenuItem
+  isFirst: boolean
+  isLast: boolean
+  nested?: boolean
+  childCount?: number
+  onMove: (item: MenuItem, dir: -1 | 1) => void
+  onToggle: () => void
+  onEdit: () => void
+  onAddChild?: () => void
+  onDelete: () => void
+}) {
+  const typeOpt = typeOptions.find(t => t.value === item.type)
+  const Icon = typeOpt?.icon ?? Link2
+  return (
+    <div className={`bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3 ${nested ? 'bg-gray-50' : ''}`}>
+      <div className="flex flex-col gap-0.5 flex-shrink-0">
+        <button onClick={() => onMove(item, -1)} disabled={isFirst} className="p-0.5 text-gray-300 hover:text-gray-700 disabled:opacity-30 disabled:hover:text-gray-300 transition-colors" title="Mover para cima">
+          <ArrowUp size={14} />
+        </button>
+        <button onClick={() => onMove(item, 1)} disabled={isLast} className="p-0.5 text-gray-300 hover:text-gray-700 disabled:opacity-30 disabled:hover:text-gray-300 transition-colors" title="Mover para baixo">
+          <ArrowDown size={14} />
+        </button>
+      </div>
+
+      <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0">
+        <Icon size={15} className="text-gray-500" />
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-gray-900 truncate">
+          {item.label}
+          {nested && <span className="ml-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">subitem</span>}
+        </p>
+        <p className="text-xs text-gray-400 truncate">{typeOpt?.label} → {destinationLabel(item)}</p>
+      </div>
+
+      <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${item.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+        {item.is_active ? 'Ativo' : 'Inativo'}
+      </span>
+
+      <div className="flex items-center gap-1 flex-shrink-0">
+        {onAddChild && (
+          <button onClick={onAddChild} className="p-1.5 text-gray-400 hover:text-primary-600 rounded-lg hover:bg-primary-50 transition-colors" title="Adicionar subitem">
+            <Plus size={15} />
+          </button>
+        )}
+        <button onClick={onToggle} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors" title={item.is_active ? 'Desativar' : 'Ativar'}>
+          {item.is_active ? <EyeOff size={15} /> : <Eye size={15} />}
+        </button>
+        <button onClick={onEdit} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors" title="Editar">
+          <Edit2 size={15} />
+        </button>
+        <button onClick={onDelete} className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors" title="Remover">
+          <Trash2 size={15} />
+        </button>
+      </div>
+      {typeof childCount === 'number' && childCount > 0 && (
+        <span className="sr-only">{childCount} subitens</span>
       )}
     </div>
   )

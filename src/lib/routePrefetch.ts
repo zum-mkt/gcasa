@@ -18,8 +18,9 @@ export const publicRouteImports = {
 const prefetched = new Set<string>()
 
 export function prefetchRoute(path: string) {
-  const load = publicRouteImports[path as keyof typeof publicRouteImports]
-  if (!load || prefetched.has(path)) return
-  prefetched.add(path)
-  load().catch(() => prefetched.delete(path))
+  const clean = path.split('#')[0] || '/'
+  const load = publicRouteImports[clean as keyof typeof publicRouteImports]
+  if (!load || prefetched.has(clean)) return
+  prefetched.add(clean)
+  load().catch(() => prefetched.delete(clean))
 }
