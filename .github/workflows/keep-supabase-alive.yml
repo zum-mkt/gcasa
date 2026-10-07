@@ -2,8 +2,7 @@ name: Keep Supabase Alive
 
 on:
   schedule:
-    - cron: '0 9 * * 1' # Segunda-feira às 9h UTC
-    - cron: '0 9 * * 4' # Quinta-feira às 9h UTC
+    - cron: '0 12 * * *' # Todo dia às 12h UTC
   workflow_dispatch:
 
 jobs:
@@ -12,24 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Supabase client
-        run: npm install @supabase/supabase-js
-
       - name: Ping Supabase
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          node -e "
-          const { createClient } = require('@supabase/supabase-js');
-          const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-          supabase.from('settings').select('key').limit(1).then(({ data, error }) => {
-            if (error) { console.error('Ping falhou:', error.message); process.exit(1); }
-            console.log('Supabase ativo. Dados:', JSON.stringify(data));
-          });
-          "
+          for i in 1 2 3; do
+            code=$(curl -s -o /tmp/out.json -w '%{http_code}' --max-time 30 \
+              "$SUPABASE_URL/rest/v1/settings?select=key&limit=1" \
+              -H "apikey: $SUPABASE_KEY" \
+              -H "Authorization: Bearer $SUPABASE_KEY") || code=000
+            echo "Tentativa $i: HTTP $code"
+            if [ "$code" = "200" ]; then
+              echo "Supabase ativo."
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::error::Supabase não respondeu (HTTP $code). O projeto pode estar pausado: restaure em https://supabase.com/dashboard/project/mpchsfmhwlcekblrcawm"
+          exit 1
